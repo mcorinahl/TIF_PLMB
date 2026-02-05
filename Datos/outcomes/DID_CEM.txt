@@ -1,0 +1,12 @@
+	(1)
+VARIABLES	ln_avaluo_real_2014
+	
+treat	0.0293***
+	(0.000971)
+Constant	18.17***
+	(0.000245)
+	
+Observations	27,383,101
+R-squared	0.608
+Robust standard errors in parentheses	
+*** p<0.01, ** p<0.05, * p<0.1	

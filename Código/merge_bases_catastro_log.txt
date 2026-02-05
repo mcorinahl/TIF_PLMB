@@ -1,0 +1,603 @@
+
+. tempfile 2015
+
+. save `2015', replace
+(file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000002.tmp not found)
+file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000002.tmp saved as .dta format
+
+. 
+. 
+. merge 1:1 codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto using `2014', gen(year_15)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                        61,688
+        from master                    53,268  (year_15==1)
+        from using                      8,420  (year_15==2)
+
+    Matched                         2,375,968  (year_15==3)
+    -----------------------------------------
+
+. 
+end of do-file
+
+. do "C:\Users\USUARIO\AppData\Local\Temp\STD5b78_00000d.tmp"
+
+.         import delim "C:\Users\USUARIO\OneDrive - Universidad de los andes\RA Andes - TIF\INFORMACIÓN CATASTRAL Y PREDIAL\PREDIO_FINAL_2015.csv", varn
+> ames(1) clear
+(encoding automatically selected: ISO-8859-1)
+(15 vars, 2,429,238 obs)
+
+.         
+. duplicates drop codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto, force
+
+Duplicates in terms of codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto
+
+(2 observations deleted)
+
+. 
+. 
+. tempfile 2015
+
+. save `2015', replace
+(file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000001.tmp not found)
+file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000001.tmp saved as .dta format
+
+. 
+.         import delim "C:\Users\USUARIO\OneDrive - Universidad de los andes\RA Andes - TIF\INFORMACIÓN CATASTRAL Y PREDIAL\PREDIO_FINAL_2016.csv", varn
+> ames(1) clear
+(encoding automatically selected: ISO-8859-1)
+(15 vars, 2,481,706 obs)
+
+.         
+. duplicates drop codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto, force
+
+Duplicates in terms of codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto
+
+(2 observations deleted)
+
+. 
+. tempfile 2016
+
+. save `2016', replace
+(file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000002.tmp not found)
+file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000002.tmp saved as .dta format
+
+. 
+. 
+. merge 1:1 codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto using `2015', gen(year_16)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                        71,198
+        from master                    61,833  (year_16==1)
+        from using                      9,365  (year_16==2)
+
+    Matched                         2,419,871  (year_16==3)
+    -----------------------------------------
+
+. 
+end of do-file
+
+. do "C:\Users\USUARIO\AppData\Local\Temp\STD5b78_00000e.tmp"
+
+.         import delim "C:\Users\USUARIO\OneDrive - Universidad de los andes\RA Andes - TIF\INFORMACIÓN CATASTRAL Y PREDIAL\PREDIO_FINAL_2016.csv", varn
+> ames(1) clear
+(encoding automatically selected: ISO-8859-1)
+(15 vars, 2,481,706 obs)
+
+.         
+. duplicates drop codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto, force
+
+Duplicates in terms of codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto
+
+(2 observations deleted)
+
+. 
+. 
+. tempfile 2016
+
+. save `2016', replace
+(file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000001.tmp not found)
+file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000001.tmp saved as .dta format
+
+. 
+.         import delim "C:\Users\USUARIO\OneDrive - Universidad de los andes\RA Andes - TIF\INFORMACIÓN CATASTRAL Y PREDIAL\PREDIO_FINAL_2017.csv", varn
+> ames(1) clear
+(encoding automatically selected: ISO-8859-1)
+(15 vars, 2,543,290 obs)
+
+.         
+. duplicates drop codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto, force
+
+Duplicates in terms of codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto
+
+(2 observations deleted)
+
+. 
+. tempfile 2017
+
+. save `2017', replace
+(file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000002.tmp not found)
+file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000002.tmp saved as .dta format
+
+. 
+. 
+. merge 1:1 codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto using `2016', gen(year_17)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                        74,054
+        from master                    67,819  (year_17==1)
+        from using                      6,235  (year_17==2)
+
+    Matched                         2,475,469  (year_17==3)
+    -----------------------------------------
+
+. 
+end of do-file
+
+. do "C:\Users\USUARIO\AppData\Local\Temp\STD5b78_00000f.tmp"
+
+.         import delim "C:\Users\USUARIO\OneDrive - Universidad de los andes\RA Andes - TIF\INFORMACIÓN CATASTRAL Y PREDIAL\PREDIO_FINAL_2017.csv", varn
+> ames(1) clear
+(encoding automatically selected: ISO-8859-1)
+(15 vars, 2,543,290 obs)
+
+.         
+. duplicates drop codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto, force
+
+Duplicates in terms of codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto
+
+(2 observations deleted)
+
+. 
+. 
+. tempfile 2017
+
+. save `2017', replace
+(file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000001.tmp not found)
+file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000001.tmp saved as .dta format
+
+. 
+.         import delim "C:\Users\USUARIO\OneDrive - Universidad de los andes\RA Andes - TIF\INFORMACIÓN CATASTRAL Y PREDIAL\PREDIO_FINAL_2018.csv", varn
+> ames(1) clear
+(encoding automatically selected: ISO-8859-1)
+(15 vars, 2,587,226 obs)
+
+.         
+. duplicates drop codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto, force
+
+Duplicates in terms of codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto
+
+(2 observations deleted)
+
+. 
+. tempfile 2018
+
+. save `2018', replace
+(file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000002.tmp not found)
+file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000002.tmp saved as .dta format
+
+. 
+. 
+. merge 1:1 codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto using `2017', gen(year_17)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                        68,286
+        from master                    56,111  (year_17==1)
+        from using                     12,175  (year_17==2)
+
+    Matched                         2,531,113  (year_17==3)
+    -----------------------------------------
+
+. 
+end of do-file
+
+. do "C:\Users\USUARIO\AppData\Local\Temp\STD5b78_00000g.tmp"
+
+.         import delim "C:\Users\USUARIO\OneDrive - Universidad de los andes\RA Andes - TIF\INFORMACIÓN CATASTRAL Y PREDIAL\PREDIO_FINAL_2018.csv", varn
+> ames(1) clear
+(encoding automatically selected: ISO-8859-1)
+(15 vars, 2,587,226 obs)
+
+.         
+. duplicates drop codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto, force
+
+Duplicates in terms of codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto
+
+(2 observations deleted)
+
+. 
+. 
+. tempfile 2018
+
+. save `2018', replace
+(file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000001.tmp not found)
+file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000001.tmp saved as .dta format
+
+. 
+.         import delim "C:\Users\USUARIO\OneDrive - Universidad de los andes\RA Andes - TIF\INFORMACIÓN CATASTRAL Y PREDIAL\PREDIO_FINAL_2019.csv", varn
+> ames(1) clear
+(encoding automatically selected: ISO-8859-1)
+(15 vars, 2,643,666 obs)
+
+.         
+. duplicates drop codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto, force
+
+Duplicates in terms of codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto
+
+(0 observations are duplicates)
+
+. 
+. tempfile 2019
+
+. save `2019', replace
+(file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000002.tmp not found)
+file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000002.tmp saved as .dta format
+
+. 
+. 
+. merge 1:1 codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto using `2018', gen(year_17)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                       100,826
+        from master                    78,634  (year_17==1)
+        from using                     22,192  (year_17==2)
+
+    Matched                         2,565,032  (year_17==3)
+    -----------------------------------------
+
+. 
+end of do-file
+
+. do "C:\Users\USUARIO\AppData\Local\Temp\STD5b78_00000h.tmp"
+
+.         import delim "C:\Users\USUARIO\OneDrive - Universidad de los andes\RA Andes - TIF\INFORMACIÓN CATASTRAL Y PREDIAL\PREDIO_FINAL_2019.csv", varn
+> ames(1) clear
+(encoding automatically selected: ISO-8859-1)
+(15 vars, 2,643,666 obs)
+
+.         
+. duplicates drop codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto, force
+
+Duplicates in terms of codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto
+
+(0 observations are duplicates)
+
+. 
+. 
+. tempfile 2019
+
+. save `2019', replace
+(file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000001.tmp not found)
+file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000001.tmp saved as .dta format
+
+. 
+.         import delim "C:\Users\USUARIO\OneDrive - Universidad de los andes\RA Andes - TIF\INFORMACIÓN CATASTRAL Y PREDIAL\PREDIO_FINAL_2020.csv", varn
+> ames(1) clear
+(encoding automatically selected: ISO-8859-1)
+(15 vars, 2,681,886 obs)
+
+.         
+. duplicates drop codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto, force
+
+Duplicates in terms of codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto
+
+(0 observations are duplicates)
+
+. 
+. tempfile 2020
+
+. save `2020', replace
+(file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000002.tmp not found)
+file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000002.tmp saved as .dta format
+
+. 
+. 
+. merge 1:1 codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto using `2019', gen(year_17)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                        56,852
+        from master                    47,536  (year_17==1)
+        from using                      9,316  (year_17==2)
+
+    Matched                         2,634,350  (year_17==3)
+    -----------------------------------------
+
+. 
+end of do-file
+
+. do "C:\Users\USUARIO\AppData\Local\Temp\STD5b78_00000i.tmp"
+
+.         import delim "C:\Users\USUARIO\OneDrive - Universidad de los andes\RA Andes - TIF\INFORMACIÓN CATASTRAL Y PREDIAL\PREDIO_FINAL_2020.csv", varn
+> ames(1) clear
+(encoding automatically selected: ISO-8859-1)
+(15 vars, 2,681,886 obs)
+
+.         
+. duplicates drop codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto, force
+
+Duplicates in terms of codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto
+
+(0 observations are duplicates)
+
+. 
+. 
+. tempfile 2020
+
+. save `2020', replace
+(file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000001.tmp not found)
+file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000001.tmp saved as .dta format
+
+. 
+.         import delim "C:\Users\USUARIO\OneDrive - Universidad de los andes\RA Andes - TIF\INFORMACIÓN CATASTRAL Y PREDIAL\PREDIO_FINAL_2021.csv", varn
+> ames(1) clear
+(encoding automatically selected: ISO-8859-1)
+(15 vars, 2,706,313 obs)
+
+.         
+. duplicates drop codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto, force
+
+Duplicates in terms of codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto
+
+(0 observations are duplicates)
+
+. 
+. tempfile 2021
+
+. save `2021', replace
+(file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000002.tmp not found)
+file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000002.tmp saved as .dta format
+
+. 
+. 
+. merge 1:1 codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto using `2020', gen(year_17)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                        30,077
+        from master                    27,252  (year_17==1)
+        from using                      2,825  (year_17==2)
+
+    Matched                         2,679,061  (year_17==3)
+    -----------------------------------------
+
+. 
+end of do-file
+
+. do "C:\Users\USUARIO\AppData\Local\Temp\STD5b78_00000j.tmp"
+
+.         import delim "C:\Users\USUARIO\OneDrive - Universidad de los andes\RA Andes - TIF\INFORMACIÓN CATASTRAL Y PREDIAL\PREDIO_FINAL_2021.csv", varn
+> ames(1) clear
+(encoding automatically selected: ISO-8859-1)
+(15 vars, 2,706,313 obs)
+
+.         
+. duplicates drop codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto, force
+
+Duplicates in terms of codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto
+
+(0 observations are duplicates)
+
+. 
+. 
+. tempfile 2021
+
+. save `2021', replace
+(file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000001.tmp not found)
+file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000001.tmp saved as .dta format
+
+. 
+.         import delim "C:\Users\USUARIO\OneDrive - Universidad de los andes\RA Andes - TIF\INFORMACIÓN CATASTRAL Y PREDIAL\PREDIO_FINAL_2022.csv", varn
+> ames(1) clear
+(encoding automatically selected: ISO-8859-1)
+(15 vars, 2,742,388 obs)
+
+.         
+. duplicates drop codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto, force
+
+Duplicates in terms of codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto
+
+(0 observations are duplicates)
+
+. 
+. tempfile 2022
+
+. save `2022', replace
+(file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000002.tmp not found)
+file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000002.tmp saved as .dta format
+
+. 
+. 
+. merge 1:1 codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto using `2021', gen(year_17)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                        40,673
+        from master                    38,374  (year_17==1)
+        from using                      2,299  (year_17==2)
+
+    Matched                         2,704,014  (year_17==3)
+    -----------------------------------------
+
+. 
+end of do-file
+
+. do "C:\Users\USUARIO\AppData\Local\Temp\STD5b78_00000k.tmp"
+
+.         import delim "C:\Users\USUARIO\OneDrive - Universidad de los andes\RA Andes - TIF\INFORMACIÓN CATASTRAL Y PREDIAL\PREDIO_FINAL_2022.csv", varn
+> ames(1) clear
+(encoding automatically selected: ISO-8859-1)
+(15 vars, 2,742,388 obs)
+
+.         
+. duplicates drop codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto, force
+
+Duplicates in terms of codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto
+
+(0 observations are duplicates)
+
+. 
+. 
+. tempfile 2022
+
+. save `2022', replace
+(file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000001.tmp not found)
+file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000001.tmp saved as .dta format
+
+. 
+.         import delim "C:\Users\USUARIO\OneDrive - Universidad de los andes\RA Andes - TIF\INFORMACIÓN CATASTRAL Y PREDIAL\PREDIO_FINAL_2023.csv", varn
+> ames(1) clear
+(encoding automatically selected: ISO-8859-1)
+(15 vars, 2,776,362 obs)
+
+.         
+. duplicates drop codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto, force
+
+Duplicates in terms of codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto
+
+(0 observations are duplicates)
+
+. 
+. tempfile 2023
+
+. save `2023', replace
+(file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000002.tmp not found)
+file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000002.tmp saved as .dta format
+
+. 
+. 
+. merge 1:1 codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto using `2022', gen(year_17)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                        38,462
+        from master                    36,218  (year_17==1)
+        from using                      2,244  (year_17==2)
+
+    Matched                         2,740,144  (year_17==3)
+    -----------------------------------------
+
+. 
+end of do-file
+
+. do "C:\Users\USUARIO\AppData\Local\Temp\STD5b78_00000l.tmp"
+
+.         import delim "C:\Users\USUARIO\OneDrive - Universidad de los andes\RA Andes - TIF\INFORMACIÓN CATASTRAL Y PREDIAL\PREDIO_FINAL_2023.csv", varn
+> ames(1) clear
+(encoding automatically selected: ISO-8859-1)
+(15 vars, 2,776,362 obs)
+
+.         
+. duplicates drop codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto, force
+
+Duplicates in terms of codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto
+
+(0 observations are duplicates)
+
+. 
+. 
+. tempfile 2023
+
+. save `2023', replace
+(file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000001.tmp not found)
+file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000001.tmp saved as .dta format
+
+. 
+.         import delim "C:\Users\USUARIO\OneDrive - Universidad de los andes\RA Andes - TIF\INFORMACIÓN CATASTRAL Y PREDIAL\PREDIO_FINAL_2024.csv", varn
+> ames(1) clear
+(encoding automatically selected: ISO-8859-1)
+(15 vars, 2,817,536 obs)
+
+.         
+. duplicates drop codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto, force
+
+Duplicates in terms of codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto
+
+(0 observations are duplicates)
+
+. 
+. tempfile 2024
+
+. save `2024', replace
+(file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000002.tmp not found)
+file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000002.tmp saved as .dta format
+
+. 
+. 
+. merge 1:1 codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto using `2023', gen(year_17)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                        49,832
+        from master                    45,503  (year_17==1)
+        from using                      4,329  (year_17==2)
+
+    Matched                         2,772,033  (year_17==3)
+    -----------------------------------------
+
+. 
+end of do-file
+
+. do "C:\Users\USUARIO\AppData\Local\Temp\STD5b78_00000m.tmp"
+
+.         import delim "C:\Users\USUARIO\OneDrive - Universidad de los andes\RA Andes - TIF\INFORMACIÓN CATASTRAL Y PREDIAL\PREDIO_FINAL_2024.csv", varn
+> ames(1) clear
+(encoding automatically selected: ISO-8859-1)
+(15 vars, 2,817,536 obs)
+
+.         
+. duplicates drop codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto, force
+
+Duplicates in terms of codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto
+
+(0 observations are duplicates)
+
+. 
+. 
+. tempfile 2024
+
+. save `2024', replace
+(file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000001.tmp not found)
+file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000001.tmp saved as .dta format
+
+. 
+.         import delim "C:\Users\USUARIO\OneDrive - Universidad de los andes\RA Andes - TIF\INFORMACIÓN CATASTRAL Y PREDIAL\PREDIO_FINAL_2025.csv", varn
+> ames(1) clear
+(encoding automatically selected: ISO-8859-1)
+(15 vars, 2,890,251 obs)
+
+.         
+. duplicates drop codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto, force
+
+Duplicates in terms of codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto
+
+(0 observations are duplicates)
+
+. 
+. tempfile 2025
+
+. save `2025', replace
+(file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000002.tmp not found)
+file C:\Users\USUARIO\AppData\Local\Temp\ST_5b78_000002.tmp saved as .dta format
+
+. 
+. 
+. merge 1:1 codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto using `2024', gen(year_17)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                        79,351
+        from master                    76,033  (year_17==1)
+        from using                      3,318  (year_17==2)
+
+    Matched                         2,814,218  (year_17==3)
+    -----------------------------------------
+
+. 
+end of do-file
+

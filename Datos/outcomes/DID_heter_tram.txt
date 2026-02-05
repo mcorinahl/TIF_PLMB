@@ -1,0 +1,18 @@
+	(1)
+VARIABLES	ln_avaluo_real_2014
+	
+treat	-0.0461
+	(0.0282)
+1.tramo#c.treat	0.0978***
+	(0.0291)
+2.tramo#c.treat	0.123***
+	(0.0285)
+3.tramo#c.treat	0.0446
+	(0.0303)
+Constant	18.07***
+	(0.000804)
+	
+Observations	26,975,894
+R-squared	0.540
+Robust standard errors in parentheses	
+*** p<0.01, ** p<0.05, * p<0.1	
