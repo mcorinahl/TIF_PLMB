@@ -17,13 +17,13 @@ clear all
 set more off
 
 ** Path
-global dir_0 "C:\Users\USUARIO\Documents\GitHub\TIF_PLMB\\"
+global dir_0 "C:\Users\USUARIO\OneDrive - Universidad de los andes\RA Andes - TIF\\"
 
 ** Data
 global dir_data "${dir_0}Datos\\"
 global dir_raw "${dir_data}raw\\"
 global dir_proc "${dir_data}processed\\"
-global dir_outcomes "${dir_data}outcomes\\"
+global dir_outcomes "C:\Users\USUARIO\Documents\GitHub\TIF_PLMB\outcomes\\"
 
 
 /*==================================================
