@@ -1,0 +1,11 @@
+Datos/raw/**
+Datos/processed/**
+*.dta
+*.log
+*.smcl
+*.gph
+*.shp
+*.shx
+*.dbf
+*.prj
+*.cpg
