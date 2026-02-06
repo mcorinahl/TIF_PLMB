@@ -119,9 +119,6 @@ gen treat = cond(treatment==1 & year>=2019,1,0)
 		vce(cluster codigo_barrio);
 #d cr 
 
-** Output
-outreg2 using "${dir_outcomes}DID_simple.docx", word keep(treat) replace
-
 *--- Estimacion DiD con ventanas de tiempo 
 
 forvalues i=2014/2025 {
@@ -146,7 +143,6 @@ estimates store didwin
 graph export "${dir_outcomes}DiD_windows.pdf", replace 
 
 ** Estimar el DiD con valor comercial
-replace trat_2018=0
 #d;
 	reghdfe ln_avaluo_com_2014 trat_*, 
 		a(codigo_lote year)
@@ -175,10 +171,12 @@ graph export "${dir_outcomes}DiD_windows_com.pdf", replace
 		vce(cluster codigo_barrio);
 #d cr 
 
+** Output
+outreg2 using "${dir_outcomes}DID_simple.docx", word keep(treat) replace
+
 *--- Estimacion DiD con ventanas de tiempo 
 
 ** Estimar el DiD 
-replace trat_2018=0
 #d;
 	reghdfe ln_avaluo_real_2014 trat_* if !inlist(descripcion_destino, ///
     "VIAS", "ESPACIO PÚBLICO", ///
