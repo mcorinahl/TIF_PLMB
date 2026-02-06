@@ -101,7 +101,7 @@ gen ln_avaluo_com_2014 = log(avaluo_com_real_2014)
 
 ** Guardar base con valores reales
 
-save "${dir_proc}predios_proc.dta"
+save "${dir_proc}predios_proc.dta", replace
 
 /*==================================================
       2: Realizar la estimación

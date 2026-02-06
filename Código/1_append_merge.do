@@ -103,7 +103,7 @@ save "${dir_proc}predios_balanceado.dta", replace
 
 * Combinar con datos espaciales de tratamiento y tramo (creadas con ArcGIS)
 
-import dbase "${dir_raw}SHAPES\Lotes_catastrales_treatment\Lotes_catastrales_treatment.dbf", clear
+import dbase "${dir_raw}SHAPES\Lotes_catastrales.gdb.zip.gdrive\Lotes_catastrales.dbf", clear
 
 ren *, lower
 ren codigo_lot codigo_lote
@@ -114,6 +114,9 @@ tab tramo treatment, mis
 
 duplicates drop codigo_lote, force
 
+* Quitar predios rurales y de Sumapaz
+drop if cod_upz == "1" | cod_upz == "3" | cod_upz == "4" | cod_upz == "5"
+
 save "${dir_proc}predios_tratamiento_shp.dta", replace
 
 * Juntar bases de predios con datos geoespaciales
@@ -121,6 +124,17 @@ save "${dir_proc}predios_tratamiento_shp.dta", replace
 use "${dir_proc}predios_balanceado.dta", clear
 
 merge m:1 codigo_lote using "${dir_proc}predios_tratamiento_shp.dta", keep(matched)
+
+/*
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                       188,666
+        from master                   131,496  (_merge==1)
+        from using                     57,170  (_merge==2)
+
+    Matched                        27,592,548  (_merge==3)
+    -----------------------------------------
+*/
 
 * El resultado es un panel catastral balanceado e incorporando las variables de tratamiento y tramo. 
 
