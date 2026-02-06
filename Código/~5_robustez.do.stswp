@@ -121,6 +121,7 @@ gen treat_400 = cond(treatment_400==1 & year>=2019,1,0)
 outreg2 using "${dir_outcomes}DID_simple.docx", word keep(treat_400) append
 
 
+
 exit
 /* End of do-file */
 

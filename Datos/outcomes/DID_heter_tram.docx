@@ -6,8 +6,8 @@
 \ql VARIABLES\cell\qc ln_avaluo_real_2014\cell\row
 \trowd\trgaph75\trleft-75\trqc\cellx2304\cellx5184
 \ql \cell\qc \cell\row
-\ql treat\cell\qc -0.0461\cell\row
-\ql \cell\qc (0.0282)\cell\row
+\ql treat\cell\qc -0.0450\cell\row
+\ql \cell\qc (0.0281)\cell\row
 \ql 1.tramo#c.treat\cell\qc 0.0978***\cell\row
 \ql \cell\qc (0.0291)\cell\row
 \ql 2.tramo#c.treat\cell\qc 0.123***\cell\row
@@ -15,11 +15,11 @@
 \ql 3.tramo#c.treat\cell\qc 0.0446\cell\row
 \ql \cell\qc (0.0303)\cell\row
 \ql Constant\cell\qc 18.07***\cell\row
-\ql \cell\qc (0.000804)\cell\row
+\ql \cell\qc (0.000805)\cell\row
 \ql \cell\qc \cell\row
-\ql Observations\cell\qc 26,975,894\cell\row
+\ql Observations\cell\qc 26,902,308\cell\row
 \trowd\trgaph75\trleft-75\trqc\trbrdrb\brdrs\clbrdrb\brdrs\cellx2304\clbrdrb\brdrs\cellx5184
-\ql R-squared\cell\qc 0.540\cell\row
+\ql R-squared\cell\qc 0.537\cell\row
 \pard\qc
 Robust standard errors in parentheses\par
 *** p<0.01, ** p<0.05, * p<0.1\par

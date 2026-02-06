@@ -1,0 +1,32 @@
+{\rtf1\fs24
+\trowd\trgaph75\trleft-75\intbl\trqc\clbrdrt\brdrs\cellx2736\clbrdrt\brdrs\cellx5616
+\ql \cell\qc (1)\cell\row
+\trowd\trgaph75\trleft-75\trqc\cellx2736\cellx5616
+\trowd\trgaph75\trleft-75\trqc\clbrdrb\brdrs\cellx2736\clbrdrb\brdrs\cellx5616
+\ql VARIABLES\cell\qc ln_avaluo_real_2014\cell\row
+\trowd\trgaph75\trleft-75\trqc\cellx2736\cellx5616
+\ql \cell\qc \cell\row
+\ql treat\cell\qc 0.00535\cell\row
+\ql \cell\qc (0.0142)\cell\row
+\ql 2.dest_cat#c.treat\cell\qc 0.0956***\cell\row
+\ql \cell\qc (0.0317)\cell\row
+\ql 3.dest_cat#c.treat\cell\qc 0.119***\cell\row
+\ql \cell\qc (0.0266)\cell\row
+\ql 4.dest_cat#c.treat\cell\qc 0.124\cell\row
+\ql \cell\qc (0.350)\cell\row
+\ql 5.dest_cat#c.treat\cell\qc 0.409***\cell\row
+\ql \cell\qc (0.107)\cell\row
+\ql 6.dest_cat#c.treat\cell\qc 0.0357\cell\row
+\ql \cell\qc (0.0247)\cell\row
+\ql 7.dest_cat#c.treat\cell\qc 0.941***\cell\row
+\ql \cell\qc (0.147)\cell\row
+\ql Constant\cell\qc 18.01***\cell\row
+\ql \cell\qc (0.00627)\cell\row
+\ql \cell\qc \cell\row
+\ql Observations\cell\qc 26,902,308\cell\row
+\trowd\trgaph75\trleft-75\trqc\trbrdrb\brdrs\clbrdrb\brdrs\cellx2736\clbrdrb\brdrs\cellx5616
+\ql R-squared\cell\qc 0.539\cell\row
+\pard\qc
+Robust standard errors in parentheses\par
+*** p<0.01, ** p<0.05, * p<0.1\par
+}

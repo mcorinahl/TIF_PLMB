@@ -1,19 +1,23 @@
 {\rtf1\fs24
-\trowd\trgaph75\trleft-75\intbl\trqc\clbrdrt\brdrs\cellx1872\clbrdrt\brdrs\cellx4752
-\ql \cell\qc (1)\cell\row
-\trowd\trgaph75\trleft-75\trqc\cellx1872\cellx4752
-\trowd\trgaph75\trleft-75\trqc\clbrdrb\brdrs\cellx1872\clbrdrb\brdrs\cellx4752
-\ql VARIABLES\cell\qc ln_avaluo_real_2014\cell\row
-\trowd\trgaph75\trleft-75\trqc\cellx1872\cellx4752
-\ql \cell\qc \cell\row
-\ql treat\cell\qc 0.0350***\cell\row
-\ql \cell\qc (0.0104)\cell\row
-\ql Constant\cell\qc 18.06***\cell\row
-\ql \cell\qc (0.000843)\cell\row
-\ql \cell\qc \cell\row
-\ql Observations\cell\qc 27,592,540\cell\row
-\trowd\trgaph75\trleft-75\trqc\trbrdrb\brdrs\clbrdrb\brdrs\cellx1872\clbrdrb\brdrs\cellx4752
-\ql R-squared\cell\qc 0.574\cell\row
+\trowd\trgaph75\trleft-75\intbl\trqc\clbrdrt\brdrs\cellx1872\clbrdrt\brdrs\cellx4752\clbrdrt\brdrs\cellx7632\clbrdrt\brdrs\cellx10512
+\ql \cell\qc (1)\cell\qc (2)\cell\qc (3)\cell\row
+\trowd\trgaph75\trleft-75\trqc\cellx1872\cellx4752\cellx7632\cellx10512
+\trowd\trgaph75\trleft-75\trqc\clbrdrb\brdrs\cellx1872\clbrdrb\brdrs\cellx4752\clbrdrb\brdrs\cellx7632\clbrdrb\brdrs\cellx10512
+\ql VARIABLES\cell\qc ln_avaluo_real_2014\cell\qc ln_avaluo_real_2014\cell\qc ln_avaluo_real_2014\cell\row
+\trowd\trgaph75\trleft-75\trqc\cellx1872\cellx4752\cellx7632\cellx10512
+\ql \cell\qc \cell\qc \cell\qc \cell\row
+\ql treat\cell\qc 0.0350***\cell\qc \cell\qc \cell\row
+\ql \cell\qc (0.0104)\cell\qc \cell\qc \cell\row
+\ql treat_1200\cell\qc \cell\qc 0.0313***\cell\qc \cell\row
+\ql \cell\qc \cell\qc (0.00982)\cell\qc \cell\row
+\ql treat_400\cell\qc \cell\qc \cell\qc 0.0427***\cell\row
+\ql \cell\qc \cell\qc \cell\qc (0.0130)\cell\row
+\ql Constant\cell\qc 18.06***\cell\qc 18.05***\cell\qc 18.05***\cell\row
+\ql \cell\qc (0.000843)\cell\qc (0.00116)\cell\qc (0.000547)\cell\row
+\ql \cell\qc \cell\qc \cell\qc \cell\row
+\ql Observations\cell\qc 27,592,540\cell\qc 27,094,600\cell\qc 27,094,600\cell\row
+\trowd\trgaph75\trleft-75\trqc\trbrdrb\brdrs\clbrdrb\brdrs\cellx1872\clbrdrb\brdrs\cellx4752\clbrdrb\brdrs\cellx7632\clbrdrb\brdrs\cellx10512
+\ql R-squared\cell\qc 0.574\cell\qc 0.558\cell\qc 0.558\cell\row
 \pard\qc
 Robust standard errors in parentheses\par
 *** p<0.01, ** p<0.05, * p<0.1\par
