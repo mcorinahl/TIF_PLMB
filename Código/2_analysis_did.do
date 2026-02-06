@@ -25,7 +25,7 @@ global dir_0 "C:\Users\USUARIO\OneDrive - Universidad de los andes\RA Andes - TI
 global dir_data "${dir_0}Datos\\"
 global dir_raw "${dir_data}raw\\"
 global dir_proc "${dir_data}processed\\"
-global dir_outcomes "C:\Users\USUARIO\Documents\GitHub\TIF_PLMB\outcomes\\"
+global dir_outcomes "C:\Users\USUARIO\Documents\GitHub\TIF_PLMB\Datos\outcomes\\"
 
 ** Paquetes 
 ** ssc install cem
