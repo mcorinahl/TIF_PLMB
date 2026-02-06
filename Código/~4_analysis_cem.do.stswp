@@ -27,7 +27,7 @@ global dir_data "${dir_0}Datos\\"
 global dir_raw "${dir_data}raw\\"
 global dir_proc "${dir_data}processed\\"
 global dir_outcomes "C:\Users\USUARIO\Documents\GitHub\TIF_PLMB\outcomes\\"
-global dir_dist "C:\Users\USUARIO\OneDrive - Universidad de los andes\Archivos de Alvaro Andres Casas Camargo - TIF - PLMB\1. Entregables\Entregable 2 - Modelación de escenarios fiscales y financieros\Distancias\\"
+global dir_dist "C:\Users\USUARIO\OneDrive - Universidad de los andes\Archivos de Alvaro Andres Casas Camargo - TIF - PLMB\1. Entregables\Entregable 2 - Modelación de escenarios fiscales y financieros\Distancias"
 
 ** Data
 /// global dir_data "${dir_0}DATA\\"
@@ -53,7 +53,9 @@ drop year
 ==================================================*/
 
 ** Importar los datos 
-import delim "${dir_dist}Distancias_Manzanas-CBD.csv", clear
+import delim "${dir_\Distancias_Manzanas-CBD.csv", clear
+
+
 
 
 /*==================================================
