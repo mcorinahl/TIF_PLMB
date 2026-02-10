@@ -1,0 +1,98 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{booktabs}
+
+\geometry{margin=2.5cm}
+
+% Configuración para resaltar sintaxis de Stata
+\lstset{
+    language=Stata,
+    backgroundcolor=\color{gray!5},
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    keywordstyle=\color{blue!70!black},
+    commentstyle=\color{green!40!black},
+    stringstyle=\color{orange},
+    frame=single,
+    showstringspaces=false
+}
+
+\title{Análisis de Factibilidad TIF para la PLMB \\ \large Modelación Econométrica y Geoespacial en Stata}
+\author{Maria Corina Hernandez}
+\date{Febrero 2026}
+
+\begin{document}
+
+\maketitle
+
+\section{Descripción del Proyecto}
+Este repositorio contiene el código fuente para estimar el mayor valor del avalúo catastral en el área de influencia de la Primera Línea del Metro de Bogotá (PLMB). El objetivo central es evaluar la viabilidad del instrumento \textbf{Tax Increment Financing (TIF)} para financiar la extensión de la línea, utilizando un panel de datos catastrales (2014-2025). 
+
+\section{Estructura del Código (.do files)}
+El flujo de trabajo se divide en cinco etapas principales:
+
+\begin{enumerate}
+    \item \textbf{\texttt{1\_append\_merge.do}}: Limpieza y estandarización de la base catastral anual de la UAECD. Crea un panel balanceado y lo vincula con la información geográfica (Shapefiles).
+    \item \textbf{\texttt{2\_analysis\_did.do}}: Implementación del modelo de \textbf{Diferencias en Diferencias (DiD)}. Incluye la deflactación de avalúos a precios constantes de 2014 y estimaciones de efectos fijos por lote y año.
+    \item \textbf{\texttt{3\_analysis\_did\_heter.do}}: Análisis de heterogeneidad por tramo y por destino económico (Residencial, Comercial, Industrial, etc.).
+    \item \textbf{\texttt{4\_analysis\_cem.do}}: Aplicación de \textbf{Coarsened Exact Matching (CEM)} para mejorar la comparabilidad entre el grupo de tratamiento y control, controlando por distancias al CBD, Transmilenio y Malla Vial.
+    \item \textbf{\texttt{5\_robustez.do}}: Pruebas de sensibilidad utilizando diferentes radios de influencia (\textit{buffers}) de 400m, 800m y 1200m.
+\end{enumerate}
+
+\section{Metodología}
+La estimación principal utiliza la especificación \texttt{reghdfe} para controlar por efectos fijos de alto nivel:
+\begin{lstlisting}
+reghdfe ln_avaluo_real_2014 treat, a(codigo_lote year) vce(cluster codigo_barrio)
+\end{lstlisting}
+Se excluyen explícitamente predios públicos, vías y lotes del estado para evitar sesgos en la estimación de la plusvalía capturable.
+
+\section{Requerimientos}
+Es necesario instalar los siguientes paquetes en Stata antes de ejecutar los scripts:
+\begin{lstlisting}
+ssc install reghdfe
+ssc install ftools
+ssc install outreg2
+ssc install cem
+ssc install coefplot
+\end{lstlisting}
+
+\section{Configuración de Rutas}
+El usuario debe ajustar la global \texttt{dir\_0} en los encabezados de los archivos para apuntar a su directorio local de trabajo.
+
+\section{Estructura del Repositorio}
+Para el correcto funcionamiento de los scripts, el repositorio debe mantener la siguiente estructura de carpetas:
+\begin{itemize}
+    \item \textbf{\texttt{/Codigos}}: Contiene los archivos \texttt{.do} analizados en este documento.
+    \item \textbf{\texttt{/Datos}}:
+    \begin{itemize}
+        \item \textbf{\texttt{/raw}}: Bases prediales anuales de la UAECD (CSV), archivos de inflación (\texttt{inflacion.xlsx}) y capas geográficas (Shapefiles/DBF) procesadas en ArcGIS con los \textit{buffers} de tratamiento.
+        \item \textbf{\texttt{/processed}}: Archivos en formato \texttt{.dta} generados tras la limpieza y el pegado (\textit{merge}) de datos.
+        \item \textbf{\texttt{/outcomes}}: Resultados finales de la investigación.
+    \end{itemize}
+\end{itemize}
+
+\section{Descripción de Outcomes}
+El código está automatizado para exportar los resultados directamente a la carpeta \texttt{/outcomes}. Los principales productos generados son:
+
+\subsection{Tablas de Regresión}
+Utilizando el comando \texttt{outreg2}, el sistema genera tablas académicas con los resultados de las estimaciones:
+\begin{itemize}
+    \item \textbf{\texttt{DID\_simple.docx}}: Contiene el efecto promedio del tratamiento (ATT) sobre el avalúo real, comparando los buffers de 400m, 800m y 1200m.
+    \item \textbf{\texttt{DID\_heter\_tram.docx}}: Desglose del impacto según el tramo de la PLMB.
+    \item \textbf{\texttt{CEM\_results.docx}}: Resultados del modelo tras el emparejamiento por \textit{Coarsened Exact Matching}, asegurando que el grupo de control sea comparable en términos de distancia al CBD y acceso a transporte.
+\end{itemize}
+
+\subsection{Visualizaciones (Formatos .pdf)}
+Se generan gráficos de coeficientes para analizar la dinámica temporal y la validez de los supuestos:
+\begin{itemize}
+    \item \textbf{\texttt{DiD\_windows.pdf}}: Gráfico de DiD dinámico que muestra los coeficientes año a año para verificar la tendencia paralela pre-tratamiento y la evolución del impacto post-2019.
+    \item \textbf{\texttt{DiD\_windows\_com.pdf}}: Análisis específico para el valor comercial de los predios para verificar diferencias tendenciales con valores catastrales.
+\end{itemize}
+
+\end{document}
