@@ -181,3 +181,20 @@ delimiter now cr
 . ** Guardar la base con los pesos
 . save "${dir_data}treat_weights.dta", replace
 file C:\Users\Alan\Dropbox\CEM\\DATA\\treat_weights.dta saved
+
+*--- Merge con el panel  original 
+#d;
+	merge 1:m codigo_lote codigo_construccion codigo_resto 
+		using "${dir_proc}predios_proc", gen(_pegados);
+#d cr
+
+/*
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                       298,332
+        from master                         0  (_pegados==1)
+        from using                    298,332  (_pegados==2)
+
+    Matched                        27,383,112  (_pegados==3)
+    -----------------------------------------
+*/

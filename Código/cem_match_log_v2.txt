@@ -1,0 +1,72 @@
+
+. do "C:\Users\proyecto\AppData\Local\Temp\STD2044_000000.tmp"
+
+. ** Realizar el CEM y crear los pesos
+. #d;
+delimiter now ;
+.         cem area_terreno codigo_estrato (0 1.5 2.5 3.5 4.5 5.5 6.5)
+>         area_construida max_num_piso 
+>         dest_residencial dest_comercial 
+>         dest_industrial dest_agricola dest_urban_noedif 
+>         dest_dotac dest_otros dist_cbd dist_plmb_p dist_cbd_p dist_tm_p dist_malla_p, treatment(treatment);
+
+Matching Summary:
+-----------------
+Number of strata: 9865
+Number of matched strata: 756
+
+                 0        1
+      All  1828030   305457
+  Matched   111616   187916
+Unmatched  1716414   117541
+
+
+Multivariate L1 distance: .92713193
+
+Univariate imbalance:
+
+                         L1      mean       min       25%       50%       75%       max
+     area_terreno    .13929   -12.385         0     -9.73    -17.44      -9.8     -1481
+   codigo_estrato   4.8e-14  -4.1e-13         0         0         0         0         0
+  area_construida    .16115   -29.492         0     -16.1     -42.6    -29.22   -2066.9
+     max_num_piso    .07663    .07047         0         0         1         1         .
+ dest_residencial   1.3e-13  -2.1e-13         0         0         0         0         0
+   dest_comercial   1.3e-13  -5.0e-14         0         0         0         0         0
+  dest_industrial   2.4e-16  -3.8e-17         0         0         0         0         0
+    dest_agricola         0         0         0         0         0         0         0
+dest_urban_noedif   1.7e-15  -2.2e-16         0         0         0         0         0
+       dest_dotac   8.0e-16  -4.9e-16         0         0         0         0         0
+       dest_otros   2.3e-16  -2.1e-17         0         0         0         0         0
+         dist_cbd    .21094   -28.945     .5564    317.03   -26.015    -312.6   -13.422
+      dist_plmb_p   9.8e-15  -1.5e-13         0         0         0         0         0
+       dist_cbd_p   9.9e-14   2.8e-13         0         0         0         0         0
+        dist_tm_p   4.5e-14   8.5e-14         0         0         0         0         0
+     dist_malla_p   4.1e-14   8.1e-14         0         0         0         0         0
+
+. #d cr
+delimiter now cr
+. 
+end of do-file
+
+. br
+
+. do "C:\Users\proyecto\AppData\Local\Temp\STD2044_000000.tmp"
+
+. tab treatment cem_matched
+
+           |      cem_matched
+ treatment |         0          1 |     Total
+-----------+----------------------+----------
+         0 | 1,716,414    111,616 | 1,828,030 
+         1 |   117,541    187,916 |   305,457 
+-----------+----------------------+----------
+     Total | 1,833,955    299,532 | 2,133,487 
+
+. 
+end of do-file
+
+. do "C:\Users\proyecto\AppData\Local\Temp\STD2044_000000.tmp"
+
+. save "${dir_proc}treat_CEM.dta", replace
+(file C:\Users\proyecto\\OneDrive - Universidad de los andes\RA Andes - TIF\Datos\\processed\\treat_CEM.dta not found)
+file C:\Users\proyecto\\OneDrive - Universidad de los andes\RA Andes - TIF\Datos\\processed\\treat_CEM.dta saved

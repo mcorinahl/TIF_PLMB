@@ -1,19 +1,19 @@
 {\rtf1\fs24
-\trowd\trgaph75\trleft-75\intbl\trqc\clbrdrt\brdrs\cellx1872\clbrdrt\brdrs\cellx4752
-\ql \cell\qc (1)\cell\row
-\trowd\trgaph75\trleft-75\trqc\cellx1872\cellx4752
-\trowd\trgaph75\trleft-75\trqc\clbrdrb\brdrs\cellx1872\clbrdrb\brdrs\cellx4752
-\ql VARIABLES\cell\qc ln_avaluo_real_2014\cell\row
-\trowd\trgaph75\trleft-75\trqc\cellx1872\cellx4752
-\ql \cell\qc \cell\row
-\ql treat\cell\qc 0.0293***\cell\row
-\ql \cell\qc (0.000971)\cell\row
-\ql Constant\cell\qc 18.17***\cell\row
-\ql \cell\qc (0.000245)\cell\row
-\ql \cell\qc \cell\row
-\ql Observations\cell\qc 27,383,101\cell\row
-\trowd\trgaph75\trleft-75\trqc\trbrdrb\brdrs\clbrdrb\brdrs\cellx1872\clbrdrb\brdrs\cellx4752
-\ql R-squared\cell\qc 0.608\cell\row
+\trowd\trgaph75\trleft-75\intbl\trqc\clbrdrt\brdrs\cellx1872\clbrdrt\brdrs\cellx4752\clbrdrt\brdrs\cellx7632\clbrdrt\brdrs\cellx10512
+\ql \cell\qc (1)\cell\qc (2)\cell\qc (3)\cell\row
+\trowd\trgaph75\trleft-75\trqc\cellx1872\cellx4752\cellx7632\cellx10512
+\trowd\trgaph75\trleft-75\trqc\clbrdrb\brdrs\cellx1872\clbrdrb\brdrs\cellx4752\clbrdrb\brdrs\cellx7632\clbrdrb\brdrs\cellx10512
+\ql VARIABLES\cell\qc ln_avaluo_real_2014\cell\qc ln_avaluo_real_2014\cell\qc ln_avaluo_real_2014\cell\row
+\trowd\trgaph75\trleft-75\trqc\cellx1872\cellx4752\cellx7632\cellx10512
+\ql \cell\qc \cell\qc \cell\qc \cell\row
+\ql treat\cell\qc 0.0293***\cell\qc -0.00127\cell\qc 0.0251***\cell\row
+\ql \cell\qc (0.000971)\cell\qc (0.00311)\cell\qc (0.00209)\cell\row
+\ql Constant\cell\qc 18.17***\cell\qc 18.44***\cell\qc 18.35***\cell\row
+\ql \cell\qc (0.000245)\cell\qc (0.00124)\cell\qc (0.000776)\cell\row
+\ql \cell\qc \cell\qc \cell\qc \cell\row
+\ql Observations\cell\qc 27,383,101\cell\qc 3,594,384\cell\qc 16,487,519\cell\row
+\trowd\trgaph75\trleft-75\trqc\trbrdrb\brdrs\clbrdrb\brdrs\cellx1872\clbrdrb\brdrs\cellx4752\clbrdrb\brdrs\cellx7632\clbrdrb\brdrs\cellx10512
+\ql R-squared\cell\qc 0.608\cell\qc 0.723\cell\qc 0.650\cell\row
 \pard\qc
 Robust standard errors in parentheses\par
 *** p<0.01, ** p<0.05, * p<0.1\par
