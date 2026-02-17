@@ -26,6 +26,7 @@ global dir_data "${dir_0}Datos\\"
 global dir_raw "${dir_data}raw\\"
 global dir_proc "${dir_data}processed\\"
 global dir_outcomes "C:\Users\USUARIO\Documents\GitHub\TIF_PLMB\Datos\outcomes\\"
+global dir_dist "C:\Users\USUARIO\OneDrive - Universidad de los andes\Archivos de Alvaro Andres Casas Camargo - TIF - PLMB\1. Entregables\Entregable 2 - Modelación de escenarios fiscales y financieros\Memoria de Cálculo y Comentarios\\"
 
 ** Paquetes 
 ** ssc install cem
@@ -110,7 +111,7 @@ tempfile manzanas_drop
 save  `manzanas_drop', replace
 
 ** Importar las áreas calculadas con los predios completos (no solamente panel balanceado)
-use "C:\Users\USUARIO\OneDrive - Universidad de los andes\Archivos de Alvaro Andres Casas Camargo - TIF - PLMB\1. Entregables\Entregable 2 - Modelación de escenarios fiscales y financieros\Memoria de Cálculo y Comentarios\manzanas_uso_suelo.dta", clear
+use "${dir_dist}manzanas_uso_suelo.dta", clear
 
 ** Eliminar manzanas de línea de intervención
 merge m:1 codigo_manzana_join using `manzanas_drop', nogen keep(master)
