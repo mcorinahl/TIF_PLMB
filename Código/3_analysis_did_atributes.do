@@ -38,7 +38,7 @@ global dir_outcomes "C:\Users\USUARIO\Documents\GitHub\TIF_PLMB\Datos\outcomes\\
 ** Importar los datos procesados
 use "${dir_proc}predios_proc.dta", clear
 
-* Calcular desviación del área construida por predio y número de pisos
+* Calcular desviación del área construida y de número de pisos
 bys id_predio: egen sd_area = sd(area_construida)
 gen cambio_area = sd_area > 0
 tab cambio_area
@@ -61,40 +61,126 @@ bys id_predio: egen first_change_area = min(cond(d_area==1, year, .))
 tab first_change_area
 
 * Revisar correlación con tratamiento (800m)
-tab cambio_area treatment, row
-tab cambio_pisos treatment, row
+tab cambio_area treatment_800, row
+tab cambio_pisos treatment_800, row
+
+/*==================================================
+      1.5: Revisar la variación a nivel manzana
+==================================================*/
+
+use "${dir_proc}predios_proc.dta", clear
+
+egen codigo_manzana_join = concat(c_barrio c_manzana)
+
+/* Colapsar las variables a nivel de código de manzana y año 
+Para el panel balanceado (solamente predios existentes en toda la línea
+de tiempo
+*/
+
+collapse (mean) treatment_* tramo codigo_estrato ///
+		 (sum) area_terreno valor_avaluo area_construida /// 
+		 max_num_piso  avaluo_total_puntual_com , /// 
+		 by(codigo_barrio codigo_manzana_join year)
+		 
+** Corregir variable de tratamiento
+foreach v in treatment_* {
+    replace `v' = (``v' > 0.65) if !missing(`v')
+}
+		 
+tempfile areas
+save `areas', replace
+
+** Eliminar aquellas manzanas adyacentes a la línea de intervención
+
+import delim "${dir_raw}SHAPES\manzanas_linea_interv.csv", clear varnames(1) delim(";")
+
+tostring mancodigo, replace
+
+	** Corregir la estructura del código de manzana para el pegue
+gen aux = substr(mancodigo, 5, 7) if strlen(mancodigo) == 7
+tab aux
+	** Todos los dígitos iniciales son 0. 
+replace aux = substr(aux, 2, 3)
+replace mancodigo = "00" + substr(mancodigo, 1, 4) + aux if strlen(mancodigo) == 7
+drop aux
+
+ren mancodigo codigo_manzana_join
+
+tempfile manzanas_drop
+save  `manzanas_drop', replace
+
+** Importar las áreas calculadas con los predios completos (no solamente panel balanceado)
+use "C:\Users\USUARIO\OneDrive - Universidad de los andes\Archivos de Alvaro Andres Casas Camargo - TIF - PLMB\1. Entregables\Entregable 2 - Modelación de escenarios fiscales y financieros\Memoria de Cálculo y Comentarios\manzanas_uso_suelo.dta", clear
+
+** Eliminar manzanas de línea de intervención
+merge m:1 codigo_manzana_join using `manzanas_drop', nogen keep(master)
+
+** Pegar variables existentes y áreas calculadas
+merge 1:1 codigo_manzana_join year using `areas', keep(matched)
+
+/* Estadísticas descriptivas de las áreas construidas a nivel manzana */
+
+bys year : sum area_construida_total area_residencial if treatment_400 == 1
+bys year : sum area_construida_total area_residencial if treatment_800 == 1
+bys year : sum area_construida_total area_residencial if treatment_1200 == 1
+
+* Calcular desviación del área construida y de número de pisos
+bys codigo_manzana_join: egen sd_area = sd(area_construida_total)
+gen cambio_area = sd_area > 0
+tab cambio_area
+
+bys codigo_manzana_join: egen sd_pisos = sd(max_num_piso)
+gen cambio_pisos = sd_pisos > 0
+tab cambio_pisos
+
+* Calcular diferencia entre área máxima y mínima
+bys codigo_manzana_join: egen max_area = max(area_construida_total)
+bys codigo_manzana_join: egen min_area = min(area_construida_total)
+gen delta_area = max_area - min_area
+sum delta_area, d
+drop max_area min_area
+
+* Revisar promedios por tratamiento (800m)
+sum delta_area if treatment_800 == 1
+sum delta_area if treatment_800 == 0
 
 /*==================================================
       2: Realizar la estimación
 ==================================================*/
 
-gen ln_area_cons = log(area_construida)
+gen ln_area_cons = log(area_construida_total)
 
 *--- Estimación DiD
 
-** Crear variable del DiD
-gen treat = cond(treatment==1 & year>=2019,1,0)
+/* Crear variable del DiD
+Cambiar variable treatment (400, 800, 1200) dependiendo de la definición 
+del tratamiento. 
+*/
+
+gen treat = cond(treatment_1200==1 & year>=2019,1,0)
 
 ** Estimar el DiD 
 #d;
 	reghdfe ln_area_cons treat, 
-		a(codigo_manzana year)
+		a(codigo_manzana_join year)
 		vce(cluster codigo_barrio);
 #d cr 
 
-*--- Estimacion DiD con ventanas de tiempo 
+** Output
+outreg2 using "${dir_outcomes}DID_atributes.docx", word keep(treat) append
+
+*--- Estimacion DiD con ventanas de tiempo para 800m
 
 forvalues i=2014/2025 {
-	gen trat_`i' = cond(year==`i',1*treatment,0)
+	gen trat_`i' = cond(year==`i',1*treatment_800,0)
 	la var trat_`i' "`i'"
 }
-
 
 ** Estimar el DiD 
 replace trat_2018=0
 #d;
 	reghdfe ln_area_cons trat_*, 
-		a(codigo_lote year)
+		a(codigo_manzana_join year)
 		vce(cluster codigo_barrio);
 #d cr 
 estimates store didwin_area

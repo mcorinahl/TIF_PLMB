@@ -1,0 +1,264 @@
+. ** Guardar la base con los pesos
+. save "${dir_proc}treat_weights_tr1.dta", replace
+(file C:\Users\USUARIO\\OneDrive - Universidad de los andes\RA Andes - TIF\Datos\\processed\\treat_weights_tr1.dta not found)
+file C:\Users\USUARIO\\OneDrive - Universidad de los andes\RA Andes - TIF\Datos\\processed\\treat_weights_tr1.dta saved
+
+. 
+. *--- Merge con el panel  original 
+. #d;
+delimiter now ;
+.         merge 1:m codigo_lote codigo_construccion codigo_resto 
+>                 using "${dir_proc}predios_proc", gen(_pegados);
+(label _merge already defined)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                    17,800,320
+        from master                         0  (_pegados==1)
+        from using                 17,800,320  (_pegados==2)
+
+    Matched                         9,792,228  (_pegados==3)
+    -----------------------------------------
+
+. drop if _pegados==2
+(17,800,320 observations deleted)
+
+. drop _pegados
+
+. gen treat = cond(treatment==1 & year>=2019,1,0)
+
+. ** Estimar el DiD 
+. #d;
+delimiter now ;
+.         reghdfe ln_avaluo_real_2014 treat [aweight=cem_weights], 
+>                 a(codigo_lote year)
+>                 vce(robust);
+(MWFE estimator converged in 3 iterations)
+
+HDFE Linear regression                            Number of obs   =  9,792,224
+Absorbing 2 HDFE groups                           F(   1,9352048) =     738.92
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.7342
+                                                  Adj R-squared   =     0.7217
+                                                  Within R-sq.    =     0.0000
+                                                  Root MSE        =     0.4339
+
+------------------------------------------------------------------------------
+             |               Robust
+ln_av~l_2014 | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       treat |  -.0193548    .000712   -27.18   0.000    -.0207504   -.0179593
+       _cons |   18.06562   .0001946  9.3e+04   0.000     18.06523      18.066
+------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+ codigo_lote |    440164           0      440164     |
+        year |        12           1          11     |
+-----------------------------------------------------+
+
+. #d cr 
+delimiter now cr
+. 
+
+. use "C:\Users\USUARIO\OneDrive - Universidad de los andes\RA Andes - TIF\Datos\processed\treat_CEM_tr2.dta", clear
+
+. tab treatment cem_matched
+
+           |      cem_matched
+ treatment |         0          1 |     Total
+-----------+----------------------+----------
+         0 | 1,447,238    380,768 | 1,828,006 
+         1 |     4,665     74,396 |    79,061 
+-----------+----------------------+----------
+     Total | 1,451,903    455,164 | 1,907,067 
+
+. 
+
+. drop if cem_matched==0
+(1,451,903 observations deleted)
+
+. #d; 
+delimiter now ;
+.         keep codigo_lote cem_weights cem_matched 
+>                  cem_strata codigo_construccion codigo_resto;
+
+. #d cr 
+delimiter now cr
+. 
+
+. save "${dir_proc}treat_weights_tr2.dta", replace
+(file C:\Users\USUARIO\\OneDrive - Universidad de los andes\RA Andes - TIF\Datos\\processed\\treat_weights_tr2.dta not found)
+file C:\Users\USUARIO\\OneDrive - Universidad de los andes\RA Andes - TIF\Datos\\processed\\treat_weights_tr2.dta saved
+
+. 
+. *--- Merge con el panel  original 
+. #d;
+delimiter now ;
+.         merge 1:m codigo_lote codigo_construccion codigo_resto 
+>                 using "${dir_proc}predios_proc", gen(_pegados);
+(label _merge already defined)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                    22,130,580
+        from master                         0  (_pegados==1)
+        from using                 22,130,580  (_pegados==2)
+
+    Matched                         5,461,968  (_pegados==3)
+    -----------------------------------------
+
+. #d cr
+delimiter now cr
+. 
+
+. drop if _pegados==2
+(22,130,580 observations deleted)
+
+. 
+
+. drop _pegados
+
+. 
+
+. gen treat = cond(treatment==1 & year>=2019,1,0)
+
+. 
+
+. ** Estimar el DiD 
+. #d;
+delimiter now ;
+.         reghdfe ln_avaluo_real_2014 treat [aweight=cem_weights], 
+>                 a(codigo_lote year)
+>                 vce(robust);
+(MWFE estimator converged in 2 iterations)
+
+HDFE Linear regression                            Number of obs   =  5,461,968
+Absorbing 2 HDFE groups                           F(   1,5229574) =     779.23
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.7274
+                                                  Adj R-squared   =     0.7153
+                                                  Within R-sq.    =     0.0002
+                                                  Root MSE        =     0.6731
+
+------------------------------------------------------------------------------
+             |               Robust
+ln_av~l_2014 | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       treat |    .052688   .0018875    27.91   0.000     .0489886    .0563873
+       _cons |    18.4618   .0006188  3.0e+04   0.000     18.46059    18.46301
+------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+ codigo_lote |    232382           0      232382     |
+        year |        12           1          11     |
+-----------------------------------------------------+
+
+. #d cr 
+delimiter now cr
+. 
+
+. use "C:\Users\USUARIO\OneDrive - Universidad de los andes\RA Andes - TIF\Datos\processed\treat_CEM_tr3.dta", clear
+
+. tab treatment cem_matched
+
+           |      cem_matched
+ treatment |         0          1 |     Total
+-----------+----------------------+----------
+         0 | 1,587,858    240,148 | 1,828,006 
+         1 |    47,258     95,420 |   142,678 
+-----------+----------------------+----------
+     Total | 1,635,116    335,568 | 1,970,684 
+
+. 
+
+. drop if cem_matched==0
+(1,635,116 observations deleted)
+
+. ** Dejar solo las variables relevantes para el match 
+. #d; 
+delimiter now ;
+.         keep codigo_lote cem_weights cem_matched 
+>                  cem_strata codigo_construccion codigo_resto;
+
+. #d cr 
+delimiter now cr
+. 
+
+. save "${dir_proc}treat_weights_tr3.dta", replace
+(file C:\Users\USUARIO\\OneDrive - Universidad de los andes\RA Andes - TIF\Datos\\processed\\treat_weights_tr3.dta not found)
+file C:\Users\USUARIO\\OneDrive - Universidad de los andes\RA Andes - TIF\Datos\\processed\\treat_weights_tr3.dta saved
+
+. 
+
+. #d;
+delimiter now ;
+.         merge 1:m codigo_lote codigo_construccion codigo_resto 
+>                 using "${dir_proc}predios_proc", gen(_pegados);
+(label _merge already defined)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                    23,565,732
+        from master                         0  (_pegados==1)
+        from using                 23,565,732  (_pegados==2)
+
+    Matched                         4,026,816  (_pegados==3)
+    -----------------------------------------
+
+. #d cr
+delimiter now cr
+. 
+
+. drop if _pegados==2
+(23,565,732 observations deleted)
+
+. drop _pegados
+
+. 
+
+. gen treat = cond(treatment==1 & year>=2019,1,0)
+
+. 
+
+. ** Estimar el DiD 
+. #d;
+delimiter now ;
+.         reghdfe ln_avaluo_real_2014 treat [aweight=cem_weights], 
+>                 a(codigo_lote year)
+>                 vce(robust);
+(MWFE estimator converged in 2 iterations)
+
+HDFE Linear regression                            Number of obs   =  4,026,816
+Absorbing 2 HDFE groups                           F(   1,3898563) =       0.26
+                                                  Prob > F        =     0.6107
+                                                  R-squared       =     0.6589
+                                                  Adj R-squared   =     0.6477
+                                                  Within R-sq.    =     0.0000
+                                                  Root MSE        =     0.8670
+
+------------------------------------------------------------------------------
+             |               Robust
+ln_av~l_2014 | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       treat |  -.0046613    .009157    -0.51   0.611    -.0226087    .0132861
+       _cons |   18.56927   .0026275  7067.34   0.000     18.56412    18.57442
+------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+ codigo_lote |    128241           0      128241     |
+        year |        12           1          11     |
+-----------------------------------------------------+
+
+. #d cr 
+delimiter now cr
+
+. 

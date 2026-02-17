@@ -106,12 +106,16 @@ save "${dir_proc}predios_balanceado.dta", replace
 import dbase "${dir_raw}SHAPES\Lotes_catastrales.gdb.zip.gdrive\Lotes_catastrales.dbf", clear
 
 ren *, lower
-ren codigo_lot codigo_lote
+ren (codigo_lot treatment treatment_ treatment1 tramo) (codigo_lote treatment_800 treatment_1200 treatment_400 tramo_800)
 
-tab tramo treatment, mis
+label variable treatment_800 "800m"
+label variable treatment_1200 "1200m"
+label variable treatment_400 "400m"
+label variable tramo_800 "tramos en 800m"
+
+tab tramo treatment_800, mis
 
 	* Dos observaciones son duplicados
-
 duplicates drop codigo_lote, force
 
 * Quitar predios rurales y de Sumapaz

@@ -20,7 +20,7 @@ set more off
 
 ** Path
 global dir_0 "C:\Users\USUARIO\\"
-global dir_0 "C:\Users\proyecto\\"
+//global dir_0 "C:\Users\proyecto\\"
 
 ** Data
 global dir_data "${dir_0}OneDrive - Universidad de los andes\RA Andes - TIF\Datos\\"
@@ -102,6 +102,8 @@ label define dest_cat 1 "Residencial" 2 "Comercial" 3 "Industrial" ///
                      6 "Dotacional privado" 7 "Otros privados"
 label values dest_cat dest_cat
 
+drop if dest_cat == 7 | dest_cat == 4
+
 /*==================================================
       Realizar la estimación
 ==================================================*/
@@ -109,7 +111,7 @@ label values dest_cat dest_cat
 *--- Estimación DiD
 
 ** Crear variable del DiD
-gen treat = cond(treatment==1 & year>=2019,1,0)
+gen treat = cond(treatment_800==1 & year>=2019,1,0)
 
 ** Estimar el DiD 
 
@@ -125,7 +127,42 @@ gen treat = cond(treatment==1 & year>=2019,1,0)
 
 ** Output
 outreg2 using "${dir_outcomes}DID_heter_dest.docx", word keep(treat dest_cat dest_cat#c.treat) replace
+
 	
+*--- Estimacion DiD con ventanas de tiempo 
+
+** Quitamos el destino dotacional privado para reducir el número de coeficientes.
+drop if dest_cat == 6
+
+/* En la variable dest los niveles son: 1 - Residencial, 2 - Comercial, 
+3 - Industrial, y 4 - Urbanizado no edificado
+*/
+
+gen dest = dest_cat
+replace dest = 4 if dest == 5
+
+* Ventanas dinámicas por tramo
+forvalues y = 2014/2025 {
+    forvalues dest = 1/4 {
+        gen trat_`y'_dest`dest' = ///
+            (year==`y' & treatment_800==1 & dest==`dest')
+        label var trat_`y'_dest`dest' "`y' x Dest `dest'"
+    }
+}
+
+** Estimar el DiD 
+foreach dest in 1 2 3 4 {
+    replace trat_2018_dest`dest' = 0
+}
+
+#d;
+reghdfe ln_avaluo_real_2014 
+    trat_*, 
+    a(codigo_lote year) 
+    vce(cluster codigo_barrio);
+#d cr 
+
+estimates store didwin_dest	
 	
 /*==================================================
       3: Heterogeneidad por Tramo

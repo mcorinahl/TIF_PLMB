@@ -300,11 +300,11 @@ bys codigo_lote: egen n_constr_lote = nvals(codigo_construccion)
 	area_construida max_num_piso 
 	dest_residencial dest_comercial 
 	dest_industrial dest_urban_noedif 
-	dest_dotac dest_otros dist_cbd dist_tm n_constr_lote, treatment(treatment);
+	dest_dotac dest_otros dist_cbd n_constr_lote, treatment(treatment_800);
 #d cr
 
 ** Inspeccionar las observaciones con match
-tab treatment cem_matched
+tab treatment_800 cem_matched
 
 ** Guardar la base completa
 save "${dir_proc}treat_CEM.dta", replace
@@ -348,7 +348,7 @@ drop _pegados
 *--- Estimación 
 
 ** Crear variable del DiD
-gen treat = cond(treatment==1 & year>=2019,1,0)
+gen treat = cond(treatment_800==1 & year>=2019,1,0)
 
 ** Estimar el DiD 
 #d;

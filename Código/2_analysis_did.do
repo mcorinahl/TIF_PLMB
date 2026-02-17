@@ -77,7 +77,7 @@ replace cum_mult = 1 if year == 2014
 ** cum_mult_t = cum_mult_{t-1} * infl_factor_t
 replace cum_mult = cum_mult[_n-1] * infl_factor if year > 2014
 
-** Create temporary file 
+** Crear archivo temporal 
 tempfile infl
 save `infl' 
 
@@ -110,7 +110,7 @@ save "${dir_proc}predios_proc.dta", replace
 *--- Estimación DiD
 
 ** Crear variable del DiD
-gen treat = cond(treatment==1 & year>=2019,1,0)
+gen treat = cond(treatment_800==1 & year>=2019,1,0)
 
 ** Estimar el DiD 
 #d;
@@ -122,7 +122,7 @@ gen treat = cond(treatment==1 & year>=2019,1,0)
 *--- Estimacion DiD con ventanas de tiempo 
 
 forvalues i=2014/2025 {
-	gen trat_`i' = cond(year==`i',1*treatment,0)
+	gen trat_`i' = cond(year==`i',1*treatment_800,0)
 	la var trat_`i' "`i'"
 }
 
