@@ -33,7 +33,7 @@ global dir_dist "${dir_0}OneDrive - Universidad de los andes\Archivos de Alvaro 
 ** ssc install cem
 ** ssc install outreg2
 ** ssc install reghdfe
-** ssc install coefplot
+** ssc inst
 
 /*==================================================
       1: Importar datos y crear categorías
