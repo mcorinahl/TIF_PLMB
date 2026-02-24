@@ -1,26 +1,28 @@
 {\rtf1\fs24
-\trowd\trgaph75\trleft-75\intbl\trqc\clbrdrt\brdrs\cellx2736\clbrdrt\brdrs\cellx5616
+\trowd\trgaph75\trleft-75\intbl\trqc\clbrdrt\brdrs\cellx3312\clbrdrt\brdrs\cellx6192
 \ql \cell\qc (1)\cell\row
-\trowd\trgaph75\trleft-75\trqc\cellx2736\cellx5616
-\trowd\trgaph75\trleft-75\trqc\clbrdrb\brdrs\cellx2736\clbrdrb\brdrs\cellx5616
+\trowd\trgaph75\trleft-75\trqc\cellx3312\cellx6192
+\trowd\trgaph75\trleft-75\trqc\clbrdrb\brdrs\cellx3312\clbrdrb\brdrs\cellx6192
 \ql VARIABLES\cell\qc ln_avaluo_real_2014\cell\row
-\trowd\trgaph75\trleft-75\trqc\cellx2736\cellx5616
+\trowd\trgaph75\trleft-75\trqc\cellx3312\cellx6192
 \ql \cell\qc \cell\row
-\ql treat\cell\qc 0.00726\cell\row
-\ql \cell\qc (0.0141)\cell\row
-\ql 2.dest_cat#c.treat\cell\qc 0.0947***\cell\row
-\ql \cell\qc (0.0316)\cell\row
-\ql 3.dest_cat#c.treat\cell\qc 0.118***\cell\row
-\ql \cell\qc (0.0268)\cell\row
-\ql 5.dest_cat#c.treat\cell\qc 0.425***\cell\row
-\ql \cell\qc (0.108)\cell\row
-\ql 6.dest_cat#c.treat\cell\qc 0.0304\cell\row
-\ql \cell\qc (0.0236)\cell\row
-\ql Constant\cell\qc 18.02***\cell\row
-\ql \cell\qc (0.00633)\cell\row
+\ql treat\cell\qc 0.0183*\cell\row
+\ql \cell\qc (0.0100)\cell\row
+\ql 3.dest_cat_pre#c.treat\cell\qc 0.0525***\cell\row
+\ql \cell\qc (0.0144)\cell\row
+\ql 4.dest_cat_pre#c.treat\cell\qc 0.111***\cell\row
+\ql \cell\qc (0.0228)\cell\row
+\ql 5.dest_cat_pre#c.treat\cell\qc 0.226***\cell\row
+\ql \cell\qc (0.0424)\cell\row
+\ql 6.dest_cat_pre#c.treat\cell\qc 0.0341*\cell\row
+\ql \cell\qc (0.0179)\cell\row
+\ql 7.dest_cat_pre#c.treat\cell\qc -0.000704\cell\row
+\ql \cell\qc (0.0475)\cell\row
+\ql Constant\cell\qc 18.07***\cell\row
+\ql \cell\qc (0.000827)\cell\row
 \ql \cell\qc \cell\row
-\ql Observations\cell\qc 26,797,601\cell\row
-\trowd\trgaph75\trleft-75\trqc\trbrdrb\brdrs\clbrdrb\brdrs\cellx2736\clbrdrb\brdrs\cellx5616
+\ql Observations\cell\qc 26,892,351\cell\row
+\trowd\trgaph75\trleft-75\trqc\trbrdrb\brdrs\clbrdrb\brdrs\cellx3312\clbrdrb\brdrs\cellx6192
 \ql R-squared\cell\qc 0.537\cell\row
 \pard\qc
 Robust standard errors in parentheses\par

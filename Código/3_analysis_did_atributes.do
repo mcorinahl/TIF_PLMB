@@ -20,7 +20,7 @@ set more off
 
 ** Path
 global dir_0 "C:\Users\USUARIO\\"
-global dir_0 "C:\Users\proyecto\\"
+//global dir_0 "C:\Users\proyecto\\"
 
 ** Data
 global dir_data "${dir_0}OneDrive - Universidad de los andes\RA Andes - TIF\Datos\\"
@@ -85,8 +85,8 @@ collapse (mean) treatment_* tramo codigo_estrato ///
 		 by(codigo_barrio codigo_manzana_join year)
 		 
 ** Corregir variable de tratamiento
-foreach v in treatment_* {
-    replace `v' = (``v' > 0.65) if !missing(`v')
+foreach v in treatment_400 treatment_800 treatment_1200 {
+    replace `v' = (`v' > 0.65) if !missing(`v')
 }
 		 
 tempfile areas
@@ -115,10 +115,13 @@ save  `manzanas_drop', replace
 use "${dir_dist}manzanas_uso_suelo.dta", clear
 
 ** Eliminar manzanas de línea de intervención
-merge m:1 codigo_manzana_join using `manzanas_drop', nogen keep(master)
+//merge m:1 codigo_manzana_join using `manzanas_drop', nogen keep(master)
 
 ** Pegar variables existentes y áreas calculadas
 merge 1:1 codigo_manzana_join year using `areas', keep(matched)
+
+** Guardar base a nivel manzana
+save "${dir_proc}manzanas_proc.dta", replace
 
 /* Estadísticas descriptivas de las áreas construidas a nivel manzana */
 
@@ -149,8 +152,13 @@ sum delta_area if treatment_800 == 0
 /*==================================================
       2: Realizar la estimación
 ==================================================*/
+sort codigo_manzana_join year
 
-gen ln_area_cons = log(area_construida_total)
+by codigo_manzana_join: gen delta_area_it = ///
+    area_construida_total - area_construida_total[_n-1] if _n>1
+
+	gen intervencion_it = abs(delta_area_it) > 50
+
 
 *--- Estimación DiD
 
@@ -159,11 +167,11 @@ Cambiar variable treatment (400, 800, 1200) dependiendo de la definición
 del tratamiento. 
 */
 
-gen treat = cond(treatment_1200==1 & year>=2019,1,0)
+gen treat = cond(treatment_400==1 & year>=2019,1,0)
 
 ** Estimar el DiD 
 #d;
-	reghdfe ln_area_cons treat, 
+	reghdfe intervencion_it treat, 
 		a(codigo_manzana_join year)
 		vce(cluster codigo_barrio);
 #d cr 
@@ -193,6 +201,70 @@ estimates store didwin_area
 #d cr 
 
 graph export "${dir_outcomes}DiD_windows_area.pdf", replace 
+
+/*==================================================
+  3: Spatial Boundary Discontinuity Design con AIM
+==================================================*/
+
+** Importamos códigos de manzanas tratadas por AIM
+import delim "${dir_raw}SHAPES\manzanas_treat_aim.csv", clear
+
+	** Corregir la estructura del código de manzana para el pegue
+tostring mannumero manseccat, replace
+
+replace mannumero = "0" + mannumero if strlen(mannumero) == 1
+replace manseccat = "00" + manseccat if strlen(manseccat) == 4
+egen codigo_manzana_join = concat( manseccat mannumero)
+
+** Generamos variable de tratamiento
+gen treat_aim = 1
+
+tempfile manz_aim_tr
+save  `manz_aim_tr', replace
+
+** Importamos códigos de manzanas no tratadas con AIM
+import delim "${dir_raw}SHAPES\manzanas_untreat_aim_donut.csv", clear
+
+	** Corregir la estructura del código de manzana
+tostring mannumero manseccat, replace
+
+replace mannumero = "0" + mannumero if strlen(mannumero) == 1
+replace manseccat = "00" + manseccat if strlen(manseccat) == 4
+egen codigo_manzana_join = concat( manseccat mannumero)
+
+** Generar variable de tratamiento
+gen treat_aim = 0
+
+keep codigo_manzana_join treat_aim
+
+** Juntar
+append using `manz_aim_tr', keep(codigo_manzana_join treat_aim)
+
+save  `manz_aim_tr', replace
+
+** Pegamos a la base de procesadas
+use "${dir_proc}manzanas_proc.dta", clear
+
+merge m:1 codigo_manzana_join using `manz_aim_tr', nogen keep(matched)
+
+/*
+
+*/
+
+** Realizar la estimación
+gen ln_area_cons = log(area_construida_total)
+
+gen treat = cond(treat_aim==1 & year>2019,1,0)
+
+** Estimar el DiD 
+#d;
+	reghdfe ln_area_cons treat, 
+		a(codigo_manzana_join year)
+		vce(cluster codigo_barrio);
+#d cr 
+
+** Output
+outreg2 using "${dir_outcomes}DID_atributes_aim.docx", word keep(treat) append
 
 exit
 /* End of do-file */

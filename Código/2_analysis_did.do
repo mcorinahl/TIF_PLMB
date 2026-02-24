@@ -140,7 +140,7 @@ estimates store didwin
 
 #d;
 	coefplot didwin, keep(trat_*) vertical yline(0) omitted 
-		title("Avaluo Catastral") ytitle("ATT");
+		title("Avalúo Catastral") ytitle("ATT");
 #d cr 
 graph export "${dir_outcomes}DiD_windows.pdf", replace 
 

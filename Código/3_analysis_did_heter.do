@@ -20,7 +20,7 @@ set more off
 
 ** Path
 global dir_0 "C:\Users\USUARIO\\"
-global dir_0 "C:\Users\proyecto\\"
+//global dir_0 "C:\Users\proyecto\\"
 
 ** Data
 global dir_data "${dir_0}OneDrive - Universidad de los andes\RA Andes - TIF\Datos\\"
@@ -57,28 +57,30 @@ drop if inlist(descripcion_destino, ///
    
 gen dest_cat = .
 
-** Residencial = 1
-replace dest_cat = 1 if descripcion_destino=="RESIDENCIAL"
-
-** Comercial = 2
-replace dest_cat = 2 if inlist(descripcion_destino, ///
-		"COMERCIO EN CORREDOR COM", ///
-		"COMERCIO PUNTUAL", ///
-		"COMERCIO EN CENTRO COMER", ///
-		"PARQUEADEROS")
 		
-** Industrial = 3
-replace dest_cat = 3 if inlist(descripcion_destino, ///
-		"INDUSTRIAL", ///
-		"AGROINDUSTRIAL")
-		
-** Agrícola/Rural = 4
-replace dest_cat = 4 if inlist(descripcion_destino, ///
+** Agrícola/Rural = 1
+replace dest_cat = 1 if inlist(descripcion_destino, ///
 		"AGRICOLA", ///
 		"AGROPECUARIO", ///
 		"PECUARIO", ///
 		"FORESTAL", ///
 		"PREDIO RURAL PARCEL. NO EDIFI.")
+
+** Residencial = 2
+replace dest_cat = 2 if descripcion_destino=="RESIDENCIAL"
+
+** Comercial = 3
+replace dest_cat = 3 if inlist(descripcion_destino, ///
+		"COMERCIO EN CORREDOR COM", ///
+		"COMERCIO PUNTUAL", ///
+		"COMERCIO EN CENTRO COMER", ///
+		"PARQUEADEROS")
+		
+** Industrial = 4
+replace dest_cat = 4 if inlist(descripcion_destino, ///
+		"INDUSTRIAL", ///
+		"AGROINDUSTRIAL")
+
 
 /* Urbanizado no edificado = 5
 Se ubica en suelo urbano y tiene un potencial directo de capitalización por el 
@@ -98,18 +100,63 @@ replace dest_cat = 6 if descripcion_destino=="DOTACIONAL PRIVADO"
 replace dest_cat = 7 if dest_cat==.
 
 ** Etiquetar
-label define dest_cat 1 "Residencial" 2 "Comercial" 3 "Industrial" ///
-                     4 "Agrícola" 5 "Urbanizado no edificado" ///
+label define dest_cat 1 "Agrícola" 2 "Residencial" 3 "Comercial" 4 "Industrial" ///
+                     5 "Urbanizado no edificado" ///
                      6 "Dotacional privado" 7 "Otros privados"
 label values dest_cat dest_cat
 
-drop if dest_cat == 7 | dest_cat == 4
+drop if dest_cat == 1
+
+** Se observan lotes que cambian de destino
+sort codigo_lote year
+bys codigo_lote: egen n_destinos = nvals(dest_cat)
+tab n_destinos
+
+/*
+ n_destinos |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 | 22,515,652       83.99       83.99
+          2 |  4,103,792       15.31       99.30
+          3 |    180,529        0.67       99.97
+          4 |      7,033        0.03      100.00
+------------+-----------------------------------
+      Total | 26,807,006      100.00
+*/
+
+** Generar binaria de cambio de destino
+sort codigo_lote year
+
+by codigo_lote: gen cambio_destino_it = ///
+    dest_cat != dest_cat[_n-1] ///
+    if year == year[_n-1] + 1
+	
+replace cambio_destino_it = 0 if year != 2014 & cambio_destino_it == . 
+
+** Fijamos el destino económico pre-tratamiento
+bys codigo_lote (year): ///
+    gen dest_cat_pre = dest_cat if year < 2019
+
+bys codigo_lote (year): ///
+    replace dest_cat_pre = dest_cat_pre[_n-1] if missing(dest_cat_pre)
+
+bys codigo_lote: ///
+    replace dest_cat_pre = dest_cat_pre[_N]
+
+** Fijamos el estrato pre-tratamiento
+bys codigo_lote (year): ///
+    gen estr_pre = codigo_estrato if year < 2019
+
+bys codigo_lote (year): ///
+    replace estr_pre = estr_pre[_n-1] if missing(estr_pre)
+
+bys codigo_lote: ///
+    replace estr_pre = estr_pre[_N]
 
 /*==================================================
       Realizar la estimación
 ==================================================*/
 
-*--- Estimación DiD
+*--- Estimación DiD para destinos
 
 ** Crear variable del DiD
 gen treat = cond(treatment_800==1 & year>=2019,1,0)
@@ -121,85 +168,86 @@ gen treat = cond(treatment_800==1 & year>=2019,1,0)
 
 #d;
 	reghdfe ln_avaluo_real_2014 
-		c.treat##i.dest_cat, 
+		c.treat##i.dest_cat_pre, 
 		a(codigo_lote year)
 		vce(cluster codigo_barrio);
 #d cr 
 
 ** Output
-outreg2 using "${dir_outcomes}DID_heter_dest.docx", word keep(treat dest_cat dest_cat#c.treat) replace
+outreg2 using "${dir_outcomes}DID_heter_dest.docx", word keep(treat dest_cat_pre dest_cat_pre#c.treat) replace
 
-	
-*--- Estimacion DiD con ventanas de tiempo 
+*--- Estimación DiD para cambio de destino (LPM)
 
-** Quitamos el destino dotacional privado para reducir el número de coeficientes.
-drop if dest_cat == 6
+#d;
+	reghdfe cambio_destino_it 
+		c.treat##i.dest_cat_pre, 
+		a(codigo_lote year)
+		vce(cluster codigo_barrio);
+#d cr 
 
-/* En la variable dest los niveles son: 1 - Residencial, 2 - Comercial, 
-3 - Industrial, y 4 - Urbanizado no edificado
+** Estimar el DiD para estratos
+
+/* Tomamos como base el estrato 6
 */
 
-gen dest = dest_cat
-replace dest = 4 if dest == 5
+preserve 
 
-* Ventanas dinámicas por tramo
-forvalues y = 2014/2025 {
-    forvalues dest = 1/4 {
-        gen trat_`y'_dest`dest' = ///
-            (year==`y' & treatment_800==1 & dest==`dest')
-        label var trat_`y'_dest`dest' "`y' x Dest `dest'"
-    }
-}
+drop if estr_pre == 0
+replace estr_pre = 0 if estr_pre == 6
 
-** Estimar el DiD 
-foreach dest in 1 2 3 4 {
-    replace trat_2018_dest`dest' = 0
-}
+#d;
+	reghdfe ln_avaluo_real_2014 
+		c.treat##i.estr_pre if dest_cat == 2, 
+		a(codigo_lote year)
+		vce(cluster codigo_barrio);
+#d cr 
+
+restore 
+
+** Output
+outreg2 using "${dir_outcomes}DID_heter_estr.docx", word keep(treat estr_pre estr_pre#c.treat) append
+
+*--- Estimacion DiD solo residencial
 
 #d;
 reghdfe ln_avaluo_real_2014 
-    trat_*, 
-    a(codigo_lote year) 
+    treat
+    if dest_cat_pre==2,
+    a(codigo_lote year)
     vce(cluster codigo_barrio);
+#d cr 
+
+** Output
+outreg2 using "${dir_outcomes}DID_heter_dest_res.docx", word keep(treat) replace
+
+*--- Estimación residencial ventanas de tiempo
+
+forvalues i=2014/2025 {
+	gen trat_`i' = cond(year==`i',1*treatment_800,0)
+	la var trat_`i' "`i'"
+}
+
+** Estimar el DiD 
+replace trat_2018=0
+
+#d;
+	reghdfe ln_avaluo_real_2014 trat_* if dest_cat_pre == 2, 
+		a(codigo_lote year)
+		vce(cluster codigo_barrio);
 #d cr 
 
 estimates store didwin_dest	
 
+honestdid, pre(1/5) post(6/12) coefplot
+
 coefplot didwin_dest, ///
-    keep(trat_*_dest1) vertical ///
+    keep(trat_*) vertical ///
     yline(0) ///
 	xlab(, angle(45)) ///
 	title("Destino Residencial") ///
-    name(dest1, replace)
-
-coefplot didwin_dest, ///
-    keep(trat_*_dest2) vertical ///
-    yline(0) ///
-	xlab(, angle(45)) ///
-	title("Destino Comercial") ///
-    name(dest2, replace)
-
-coefplot didwin_dest, ///
-    keep(trat_*_dest3) vertical ///
-    yline(0) ///
-	xlab(, angle(45)) ///
-	title("Destino Industrial") ///
-    name(dest3, replace)
-	
-coefplot didwin_dest, ///
-    keep(trat_*_dest4) vertical ///
-    yline(0) ///
-	xlab(, angle(45)) ///
-	title("Urbanizado no Construido") ///
-    name(dest4, replace)
-	
-graph combine dest1 dest2 dest3 dest4, ///
-    col(2) ///
-    title("Valor catastral por destino") ///
-    ycommon	xcommon
+    name(dest, replace)
 
 graph export "${dir_outcomes}DiD_windows_dest.pdf", replace 
-
 	
 /*==================================================
       3: Heterogeneidad por Tramo
