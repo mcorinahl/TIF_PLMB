@@ -112,7 +112,7 @@ save "${dir_proc}predios_proc.dta", replace
 *--- Estimación DiD
 
 ** Crear variable del DiD
-gen treat = cond(treatment_800==1 & year>=2019,1,0)
+gen treat = cond(treatment_1200==1 & year>=2019,1,0)
 
 ** Estimar el DiD 
 #d;
@@ -124,7 +124,7 @@ gen treat = cond(treatment_800==1 & year>=2019,1,0)
 *--- Estimacion DiD con ventanas de tiempo 
 
 forvalues i=2014/2025 {
-	gen trat_`i' = cond(year==`i',1*treatment_800,0)
+	gen trat_`i' = cond(year==`i',1*treatment_1200,0)
 	la var trat_`i' "`i'"
 }
 
@@ -142,7 +142,7 @@ estimates store didwin
 	coefplot didwin, keep(trat_*) vertical yline(0) omitted 
 		title("Avalúo Catastral") ytitle("ATT");
 #d cr 
-graph export "${dir_outcomes}DiD_windows.pdf", replace 
+graph export "${dir_outcomes}DiD_windows_1200.pdf", replace 
 
 ** Estimar el DiD con valor comercial
 #d;
@@ -156,7 +156,7 @@ estimates store didwin_com
 	coefplot didwin_com, keep(trat_*) vertical yline(0) omitted
 		title("Avaluo Comercial") ytitle("ATT");
 #d cr 
-graph export "${dir_outcomes}DiD_windows_com.pdf", replace 
+graph export "${dir_outcomes}DiD_windows_com_1200.pdf", replace 
 
 /*==================================================
       3: Estimación sin predios públicos y vías

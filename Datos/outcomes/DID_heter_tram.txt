@@ -1,18 +1,24 @@
-	(1)
-VARIABLES	ln_avaluo_real_2014
-	
-treat	-0.0450
-	(0.0281)
-1.tramo#c.treat	0.0978***
-	(0.0291)
-2.tramo#c.treat	0.123***
-	(0.0285)
-3.tramo#c.treat	0.0446
-	(0.0303)
-Constant	18.07***
-	(0.000805)
-	
-Observations	26,902,308
-R-squared	0.537
-Robust standard errors in parentheses	
-*** p<0.01, ** p<0.05, * p<0.1	
+	(1)	(2)
+VARIABLES	ln_avaluo_real_2014	AI 1200
+		
+treat	-0.0450	0.0164
+	(0.0281)	(0.0134)
+1.tramo#c.treat	0.0978***	
+	(0.0291)	
+2.tramo#c.treat	0.123***	
+	(0.0285)	
+3.tramo#c.treat	0.0446	
+	(0.0303)	
+1.tramo_800#c.treat		0.0378*
+		(0.0198)
+2.tramo_800#c.treat		0.0632***
+		(0.0176)
+3.tramo_800#c.treat		-0.0154
+		(0.0160)
+Constant	18.07***	18.07***
+	(0.000805)	(0.00112)
+		
+Observations	26,902,308	26,894,226
+R-squared	0.537	0.537
+Robust standard errors in parentheses		
+*** p<0.01, ** p<0.05, * p<0.1		

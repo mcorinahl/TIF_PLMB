@@ -20,7 +20,7 @@ set more off
 
 ** Path
 global dir_0 "C:\Users\USUARIO\\"
-//global dir_0 "C:\Users\proyecto\\"
+global dir_0 "C:\Users\proyecto\\"
 
 ** Data
 global dir_data "${dir_0}OneDrive - Universidad de los andes\RA Andes - TIF\Datos\\"
@@ -159,7 +159,7 @@ bys codigo_lote: ///
 *--- Estimación DiD para destinos
 
 ** Crear variable del DiD
-gen treat = cond(treatment_800==1 & year>=2019,1,0)
+gen treat = cond(treatment_1200==1 & year>=2019,1,0)
 
 ** Estimar el DiD 
 
@@ -174,7 +174,7 @@ gen treat = cond(treatment_800==1 & year>=2019,1,0)
 #d cr 
 
 ** Output
-outreg2 using "${dir_outcomes}DID_heter_dest.docx", word keep(treat dest_cat_pre dest_cat_pre#c.treat) replace
+outreg2 using "${dir_outcomes}DID_heter_dest.docx", word keep(treat dest_cat_pre dest_cat_pre#c.treat) append ctitle("AI 1200")
 
 *--- Estimación DiD para cambio de destino (LPM)
 
@@ -205,7 +205,7 @@ replace estr_pre = 0 if estr_pre == 6
 restore 
 
 ** Output
-outreg2 using "${dir_outcomes}DID_heter_estr.docx", word keep(treat estr_pre estr_pre#c.treat) append
+outreg2 using "${dir_outcomes}DID_heter_estr.docx", word keep(treat estr_pre estr_pre#c.treat) append ctitle("AI 1200")
 
 *--- Estimacion DiD solo residencial
 
@@ -218,12 +218,13 @@ reghdfe ln_avaluo_real_2014
 #d cr 
 
 ** Output
-outreg2 using "${dir_outcomes}DID_heter_dest_res.docx", word keep(treat) replace
+outreg2 using "${dir_outcomes}DID_heter_dest_res.docx", word keep(treat) append ctitle("AI 1200")
 
+/*
 *--- Estimación residencial ventanas de tiempo
 
 forvalues i=2014/2025 {
-	gen trat_`i' = cond(year==`i',1*treatment_800,0)
+	gen trat_`i' = cond(year==`i',1*treatment_1200,0)
 	la var trat_`i' "`i'"
 }
 
@@ -248,6 +249,7 @@ coefplot didwin_dest, ///
     name(dest, replace)
 
 graph export "${dir_outcomes}DiD_windows_dest.pdf", replace 
+*/
 	
 /*==================================================
       3: Heterogeneidad por Tramo
@@ -263,7 +265,7 @@ reghdfe ln_avaluo_real_2014
 #d cr 
 
 ** Output
-outreg2 using "${dir_outcomes}DID_heter_tram.docx", word keep(treat tramo#c.treat) replace
+outreg2 using "${dir_outcomes}DID_heter_tram.docx", word keep(treat tramo#c.treat) append ctitle("AI 1200")
 	
 *--- Estimacion DiD con ventanas de tiempo 
 

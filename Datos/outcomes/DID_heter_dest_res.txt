@@ -1,12 +1,12 @@
-	(1)
-VARIABLES	ln_avaluo_real_2014
-	
-treat	0.0283***
-	(0.0102)
-Constant	17.97***
-	(0.000677)
-	
-Observations	23,044,610
-R-squared	0.454
-Robust standard errors in parentheses	
-*** p<0.01, ** p<0.05, * p<0.1	
+	(1)	(2)
+VARIABLES	ln_avaluo_real_2014	AI 1200
+		
+treat	0.0283***	0.0256***
+	(0.0102)	(0.00943)
+Constant	17.97***	17.97***
+	(0.000677)	(0.000962)
+		
+Observations	23,044,610	23,051,146
+R-squared	0.454	0.454
+Robust standard errors in parentheses		
+*** p<0.01, ** p<0.05, * p<0.1		
