@@ -19,7 +19,7 @@ set more off
 
 ** Path
 global dir_0 "C:\Users\USUARIO\\"
-global dir_0 "C:\Users\proyecto\\"
+//global dir_0 "C:\Users\proyecto\\"
 
 ** Data
 global dir_data "${dir_0}OneDrive - Universidad de los andes\RA Andes - TIF\Datos\\"
