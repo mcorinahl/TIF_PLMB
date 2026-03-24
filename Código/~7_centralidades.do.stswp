@@ -461,7 +461,7 @@ gen post = cond( year >= 2019, 1, 0)
 gen inv_dist_plmb = 1/(dist_plmb+1000)
 
 #d;
-	reghdfe ln_avaluo_real_2014 c.post##c.inv_dist_plmb##c.I_AccB, 
+	reghdfe ln_avaluo_real_2014 c.post##c.inv_dist_plmb, 
 		a(codigo_lote year)
 		vce(cluster codigo_barrio);
 #d cr
