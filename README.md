@@ -122,9 +122,9 @@ Los índices se pegan a `predios_proc_ai2.dta` para su uso en análisis de heter
 ### Etapa 8 — Robustez: Grupo de Control Alternativo
 
 **`8_robustez_control.do`**
-Prueba de sensibilidad a la definición del grupo de control. En lugar de usar toda la ciudad como control (especificación base), este archivo define un contrafactual espacialmente acotado: las manzanas dentro de un **buffer de 1200m alrededor de la nueva área de influencia** pero por fuera del área de tratamiento. Esto reduce la posibilidad de que el grupo de control capture dinámicas urbanas muy distintas al corredor del metro, a costa de reducir el tamaño del grupo de control.
+Prueba de sensibilidad a la definición del grupo de control. En lugar de usar toda la ciudad como control (especificación base), este archivo define un contrafactual espacialmente acotado: las manzanas dentro de un **buffer de 1500m alrededor de la nueva área de influencia** pero por fuera del área de tratamiento. Esto reduce la posibilidad de que el grupo de control capture dinámicas urbanas muy distintas al corredor del metro, a costa de reducir el tamaño del grupo de control.
 
-- **Entrada:** `predios_proc_ai2.dta`, `manzanas_contrafac.csv` (manzanas en el anillo 1200m alrededor de la nueva AI), `manzanas_AI_vias_tramos.csv`
+- **Entrada:** `predios_proc_ai2.dta`, `manzanas_contrafac.csv` (manzanas en el anillo 1500m alrededor de la nueva AI), `manzanas_AI_vias_tramos.csv`
 - **Salida:** Estimaciones DiD con control restringido al anillo perimetral (heterogeneidad por destino, estrato y tramo)
 
 ### Etapa 9 — Heterogeneidad por Destino/Estrato × Accesibilidad

@@ -10,6 +10,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[spanish, es-tabla]{babel}
+\usepackage{amsmath}
 
 % --- Geometría ---
 \usepackage[top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm]{geometry}
@@ -260,7 +261,7 @@ Los índices se pegan a \texttt{predios\_proc\_ai2.dta} para su uso en análisis
 \subsection{Etapa 8 — Robustez: Grupo de Control Alternativo (\texttt{8\_robustez\_control.do})}
 % -----------------------------------------------------------
 
-Prueba de sensibilidad a la definición del grupo de control. En lugar de usar toda la ciudad como control (especificación base), define un contrafactual espacialmente acotado: las manzanas dentro de un \textbf{buffer de 1200m alrededor de la nueva área de influencia} pero por fuera del área de tratamiento.
+Prueba de sensibilidad a la definición del grupo de control. En lugar de usar toda la ciudad como control (especificación base), define un contrafactual espacialmente acotado: las manzanas dentro de un \textbf{buffer de 1500m alrededor de la nueva área de influencia} pero por fuera del área de tratamiento.
 
 \begin{itemize}
   \item \textbf{Entrada:} \texttt{predios\_proc\_ai2.dta}, \texttt{manzanas\_contrafac.csv}, \texttt{manzanas\_AI\_vias\_tramos.csv}
@@ -480,11 +481,5 @@ Los do-files deben correrse en el siguiente orden. Los archivos 3a y 3b pueden e
             └── 9_heter_access.do
 8_robustez_control.do   (requiere predios_proc_ai2.dta de 6_nueva_ai.do)
 \end{lstlisting}
-
-% ============================================================
-\vspace{2cm}
-\begin{center}
-  \textcolor{gray}{\small Documentación generada con Claude Code (claude-sonnet-4-6) · Marzo 2026}
-\end{center}
 
 \end{document}
