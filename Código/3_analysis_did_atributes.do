@@ -157,7 +157,7 @@ sort codigo_manzana_join year
 by codigo_manzana_join: gen delta_area_it = ///
     area_construida_total - area_construida_total[_n-1] if _n>1
 
-	gen intervencion_it = abs(delta_area_it) > 50
+	gen intervencion_it = delta_area_it > 0
 
 
 *--- Estimación DiD
@@ -180,6 +180,8 @@ gen treat = cond(treatment_400==1 & year>=2019,1,0)
 outreg2 using "${dir_outcomes}DID_atributes.docx", word keep(treat) append
 
 *--- Estimacion DiD con ventanas de tiempo para 800m
+
+gen ln_area_cons = log(area_construida_total)
 
 forvalues i=2014/2025 {
 	gen trat_`i' = cond(year==`i',1*treatment_800,0)
@@ -246,10 +248,6 @@ save  `manz_aim_tr', replace
 use "${dir_proc}manzanas_proc.dta", clear
 
 merge m:1 codigo_manzana_join using `manz_aim_tr', nogen keep(matched)
-
-/*
-
-*/
 
 ** Realizar la estimación
 gen ln_area_cons = log(area_construida_total)

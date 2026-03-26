@@ -20,7 +20,7 @@ set more off
 
 ** Path
 global dir_0 "C:\Users\USUARIO\\"
-global dir_0 "C:\Users\proyecto\\"
+//global dir_0 "C:\Users\proyecto\\"
 
 ** Data
 global dir_data "${dir_0}OneDrive - Universidad de los andes\RA Andes - TIF\Datos\\"
@@ -184,6 +184,9 @@ outreg2 using "${dir_outcomes}DID_heter_dest.docx", word keep(treat dest_cat_pre
 		a(codigo_lote year)
 		vce(cluster codigo_barrio);
 #d cr 
+
+** Output
+outreg2 using "${dir_outcomes}DID_heter_dest.docx", word keep(treat dest_cat_pre dest_cat_pre#c.treat) append ctitle("dest_cambio")
 
 ** Estimar el DiD para estratos
 

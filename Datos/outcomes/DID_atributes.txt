@@ -1,12 +1,12 @@
-	(1)	(2)	(3)
-VARIABLES	ln_area_cons	ln_area_cons	ln_area_cons
-			
-treat	-0.0251***	-0.0189***	-0.0187***
-	(0.00752)	(0.00529)	(0.00460)
-Constant	8.334***	8.335***	8.336***
-	(0.000222)	(0.000359)	(0.000487)
-			
-Observations	470,004	470,004	470,004
-R-squared	0.986	0.986	0.986
-Robust standard errors in parentheses			
-*** p<0.01, ** p<0.05, * p<0.1			
+	(1)	(2)	(3)	(4)
+VARIABLES	ln_area_cons	ln_area_cons	ln_area_cons	intervencion_it
+				
+treat	-0.0251***	-0.0189***	-0.0187***	0.0221
+	(0.00752)	(0.00529)	(0.00460)	(0.0140)
+Constant	8.334***	8.335***	8.336***	0.314***
+	(0.000222)	(0.000359)	(0.000487)	(0.000540)
+				
+Observations	470,004	470,004	470,004	512,280
+R-squared	0.986	0.986	0.986	0.390
+Robust standard errors in parentheses				
+*** p<0.01, ** p<0.05, * p<0.1				
