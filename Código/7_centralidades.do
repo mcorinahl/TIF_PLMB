@@ -432,7 +432,8 @@ replace I_AccB=D1*WD1p+D2*WD2p+D3*WD34p+D4*WD567p
 ==================================================*/
 
 
-* GUARDAR BASE DE MANZANA CON VARIABLES GENERADAS
+* GUARDAR BASE DE MANZANA CON VARIABLES GENERADAS 
+* EDITAR LA LISTA DE VARIABLES SEGÚN LA NECESIDAD
 ren man_codigo mancodigo
 keep mancodigo dist_plmb economic_access* access_group ln_dist_cbd cbd_group amenities_index I_AccB
 
@@ -452,6 +453,8 @@ drop m_distancias
 /*================================================== 
 		9. Modelos de efectos heterogéneos
 ==================================================*/
+
+log using "${dir_outcomes}modelos_heter.smcl", replace
 
 *---------------------------------------------------------------*
 * PCA
@@ -551,3 +554,6 @@ margins, dydx(inv_dist_plmb) at(economic_access=(-0.2 0 0.1) post=1)
 		a(codigo_lote year)
 		vce(cluster codigo_barrio);
 #d cr
+
+* Cerrar archivo log para guardar resultados. 
+log close

@@ -1,0 +1,519 @@
+
+
+      name:  <unnamed>
+       log:  C:\Users\USUARIO\\Documents\GitHub\TIF_PLMB\Datos\outcomes\\modelos_heter.smcl
+  log type:  smcl
+ opened on:  26 Mar 2026, 01:22:11
+
+. 
+. *---------------------------------------------------------------*
+. * PCA
+. *---------------------------------------------------------------*
+. 
+. gen post = cond( year >= 2019, 1, 0)
+
+. gen inv_dist_plmb = 1/(dist_plmb+1000)
+(2,258,705 missing values generated)
+
+. 
+. #d;
+delimiter now ;
+.         reghdfe ln_avaluo_real_2014 c.post##c.inv_dist_plmb##c.I_AccB, 
+>                 a(codigo_lote year)
+>                 vce(cluster codigo_barrio);
+(dropped 480 )
+( converged in 5 iterations)
+note: post is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+note: inv_dist_plmb is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+note: I_AccB is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+note: c.inv_dist_plmb#c.I_AccB is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+
+HDFE Linear regressionNumber of obs= 23,320,842
+Absorbing 2 HDFE groupsF(   3,    939)=      20.31
+Statistics robust to heteroskedasticityProb > F=     0.0000
+R-squared=     0.5291
+Adj R-squared=     0.5140
+Within R-sq.=     0.0003
+Number of clusters (codigo_barrio) =        940Root MSE=     0.8942
+
+ clusters in )}
+
+    Robust
+            ln_avaluo_real_2014 Coefficient  std. err.      t   P>|t|     [95% conf. interval]
+
+post         0  (omitted)
+inv_dist_plmb         0  (omitted)
+ 
+c.post#c.inv_dist_plmb  1318.651 214.0407    6.160.000 898.5978 1738.705
+ 
+I_AccB         0  (omitted)
+ 
+c.post#c.I_AccB  1.085216 .1695834    6.400.000 .7524095 1.418022
+ 
+c.inv_dist_plmb#c.I_AccB         0  (omitted)
+ 
+c.post#c.inv_dist_plmb#c.I_AccB -3202.536 555.4727   -5.770.000-4292.648-2112.425
+ 
+_cons  17.83737 .0400742  445.110.000 17.75872 17.91601
+
+Absorbed degrees of freedom:
+
+ Absorbed FE Categories - Redundant  = Num. Coefs
+
+ codigo_lote   727128   727128        0*
+        year       12        1       11 
+
+* = FE nested within cluster; treated as redundant for DoF computation
+
+. #d cr
+delimiter now cr
+. 
+. 
+. *---------------------------------------------------------------*
+. * Tratamiento continuo
+. *---------------------------------------------------------------*
+. 
+. #d;
+delimiter now ;
+.         reghdfe ln_avaluo_real_2014 c.post##c.inv_dist_plmb, 
+>                 a(codigo_lote year)
+>                 vce(cluster codigo_barrio);
+(dropped 722 )
+( converged in 5 iterations)
+note: post is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+note: inv_dist_plmb is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+
+HDFE Linear regressionNumber of obs= 28,115,757
+Absorbing 2 HDFE groupsF(   1,    962)=      13.04
+Statistics robust to heteroskedasticityProb > F=     0.0003
+R-squared=     0.5140
+Adj R-squared=     0.4996
+Within R-sq.=     0.0001
+Number of clusters (codigo_barrio) =        963Root MSE=     0.9138
+
+ clusters in )}
+
+    Robust
+   ln_avaluo_real_2014 Coefficient  std. err.      t   P>|t|     [95% conf. interval]
+
+post         0  (omitted)
+inv_dist_plmb         0  (omitted)
+ 
+c.post#c.inv_dist_plmb  71.59154 19.82419    3.610.000 32.68789 110.4952
+ 
+_cons  18.03528 .0029686 6075.400.000 18.02945  18.0411
+
+Absorbed degrees of freedom:
+
+ Absorbed FE Categories - Redundant  = Num. Coefs
+
+ codigo_lote   812848   812848        0*
+        year       12        1       11 
+
+* = FE nested within cluster; treated as redundant for DoF computation
+
+. #d cr
+delimiter now cr
+. 
+. 
+. *---------------------------------------------------------------*
+. * Accesibilidad econÃ³mica continua
+. *---------------------------------------------------------------*
+. 
+. * 1) Accesibilidad medida con promedio simple
+. #d;
+delimiter now ;
+.         reghdfe ln_avaluo_real_2014 c.treat##c.economic_access, 
+>                 a(codigo_lote year)
+>                 vce(cluster codigo_barrio);
+(dropped 824 )
+( converged in 5 iterations)
+note: economic_access is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+
+HDFE Linear regressionNumber of obs= 29,529,246
+Absorbing 2 HDFE groupsF(   2,    987)=       6.00
+Statistics robust to heteroskedasticityProb > F=     0.0026
+R-squared=     0.5155
+Adj R-squared=     0.5015
+Within R-sq.=     0.0000
+Number of clusters (codigo_barrio) =        988Root MSE=     0.9222
+
+ clusters in )}
+
+    Robust
+      ln_avaluo_real_2014 Coefficient  std. err.      t   P>|t|     [95% conf. interval]
+
+treat   -.00089 .0106534   -0.080.933-.0217959 .0200159
+economic_access         0  (omitted)
+ 
+c.treat#c.economic_access  .0220601 .0065928    3.350.001 .0091225 .0349977
+ 
+_cons  18.02429 .0014245 1.3e+040.000  18.0215 18.02709
+
+Absorbed degrees of freedom:
+
+ Absorbed FE Categories - Redundant  = Num. Coefs
+
+ codigo_lote   828311   828311        0*
+        year       12        1       11 
+
+* = FE nested within cluster; treated as redundant for DoF computation
+
+. #d cr
+delimiter now cr
+. 
+. * 2) Accesibilidad medida con gravedad
+. #d;
+delimiter now ;
+.         reghdfe ln_avaluo_real_2014 c.treat##c.economic_access_gr, 
+>                 a(codigo_lote year)
+>                 vce(cluster codigo_barrio);
+(dropped 824 )
+( converged in 5 iterations)
+note: economic_access_gr is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+
+HDFE Linear regressionNumber of obs= 29,529,246
+Absorbing 2 HDFE groupsF(   2,    987)=       0.10
+Statistics robust to heteroskedasticityProb > F=     0.9044
+R-squared=     0.5155
+Adj R-squared=     0.5015
+Within R-sq.=     0.0000
+Number of clusters (codigo_barrio) =        988Root MSE=     0.9222
+
+ clusters in )}
+
+    Robust
+         ln_avaluo_real_2014 Coefficient  std. err.      t   P>|t|     [95% conf. interval]
+
+treat -.0012081 .0125504   -0.100.923-.0258366 .0234203
+economic_access_gr         0  (omitted)
+ 
+c.treat#c.economic_access_gr  .0035725 .0085461    0.420.676-.0131981 .0203431
+ 
+_cons  18.02432 .0014711 1.2e+040.000 18.02143 18.02721
+
+Absorbed degrees of freedom:
+
+ Absorbed FE Categories - Redundant  = Num. Coefs
+
+ codigo_lote   828311   828311        0*
+        year       12        1       11 
+
+* = FE nested within cluster; treated as redundant for DoF computation
+
+. #d cr
+delimiter now cr
+. 
+. * 3) Accesibilidad medida con decaimiento
+. #d;
+delimiter now ;
+.         reghdfe ln_avaluo_real_2014 c.treat##c.economic_access_exp, 
+>                 a(codigo_lote year)
+>                 vce(cluster codigo_barrio);
+(dropped 824 )
+( converged in 5 iterations)
+note: economic_access_exp is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+
+HDFE Linear regressionNumber of obs= 29,529,246
+Absorbing 2 HDFE groupsF(   2,    987)=       0.10
+Statistics robust to heteroskedasticityProb > F=     0.9067
+R-squared=     0.5155
+Adj R-squared=     0.5015
+Within R-sq.=     0.0000
+Number of clusters (codigo_barrio) =        988Root MSE=     0.9222
+
+ clusters in )}
+
+    Robust
+          ln_avaluo_real_2014 Coefficient  std. err.      t   P>|t|     [95% conf. interval]
+
+treat  .0056754 .0128801    0.440.660   -.0196 .0309509
+economic_access_exp         0  (omitted)
+ 
+c.treat#c.economic_access_exp -.0012883  .004386   -0.290.769-.0098953 .0073187
+ 
+_cons  18.02433 .0014739 1.2e+040.000 18.02143 18.02722
+
+Absorbed degrees of freedom:
+
+ Absorbed FE Categories - Redundant  = Num. Coefs
+
+ codigo_lote   828311   828311        0*
+        year       12        1       11 
+
+* = FE nested within cluster; treated as redundant for DoF computation
+
+. #d cr
+delimiter now cr
+. 
+. *---------------------------------------------------------------*
+. * Accesibilidad econÃ³mica por quintiles
+. *---------------------------------------------------------------*
+. 
+. #d;
+delimiter now ;
+.         reghdfe ln_avaluo_real_2014 c.treat##i.access_group, 
+>                 a(codigo_lote year)
+>                 vce(cluster codigo_barrio);
+(dropped 824 )
+( converged in 5 iterations)
+note: 2bn.access_group is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+note: 3bn.access_group is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+note: 4bn.access_group is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+note: 5bn.access_group is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+
+HDFE Linear regressionNumber of obs= 29,529,246
+Absorbing 2 HDFE groupsF(   5,    987)=       5.36
+Statistics robust to heteroskedasticityProb > F=     0.0001
+R-squared=     0.5155
+Adj R-squared=     0.5015
+Within R-sq.=     0.0000
+Number of clusters (codigo_barrio) =        988Root MSE=     0.9222
+
+ clusters in )}
+
+    Robust
+ ln_avaluo_real_2014 Coefficient  std. err.      t   P>|t|     [95% conf. interval]
+
+treat -.0244893 .0134561   -1.820.069-.0508952 .0019165
+ 
+access_group 
+2          0  (omitted)
+3          0  (omitted)
+4          0  (omitted)
+5          0  (omitted)
+ 
+access_group#c.treat 
+2   .0355862 .0121056    2.940.003 .0118306 .0593418
+3   .0514111 .0129684    3.960.000 .0259622   .07686
+4   .0099956 .0137508    0.730.467-.0169887 .0369798
+5   .0553472 .0149598    3.700.000 .0259906 .0847039
+ 
+_cons   18.0243 .0014207 1.3e+040.000 18.02151 18.02709
+
+Absorbed degrees of freedom:
+
+ Absorbed FE Categories - Redundant  = Num. Coefs
+
+ codigo_lote   828311   828311        0*
+        year       12        1       11 
+
+* = FE nested within cluster; treated as redundant for DoF computation
+
+. #d cr
+delimiter now cr
+. 
+. *---------------------------------------------------------------*
+. * Centralidad
+. *---------------------------------------------------------------*
+. 
+. #d;
+delimiter now ;
+.         reghdfe ln_avaluo_real_2014 c.treat##c.ln_dist_cbd, 
+>                 a(codigo_lote year)
+>                 vce(cluster codigo_barrio);
+(dropped 722 )
+( converged in 5 iterations)
+note: ln_dist_cbd is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+
+HDFE Linear regressionNumber of obs= 28,115,757
+Absorbing 2 HDFE groupsF(   2,    962)=      39.35
+Statistics robust to heteroskedasticityProb > F=     0.0000
+R-squared=     0.5141
+Adj R-squared=     0.4996
+Within R-sq.=     0.0002
+Number of clusters (codigo_barrio) =        963Root MSE=     0.9137
+
+ clusters in )}
+
+    Robust
+  ln_avaluo_real_2014 Coefficient  std. err.      t   P>|t|     [95% conf. interval]
+
+treat  -.443234 .0517369   -8.570.000-.5447642-.3417038
+ln_dist_cbd         0  (omitted)
+ 
+c.treat#c.ln_dist_cbd  .0516238 .0058332    8.850.000 .0401765 .0630712
+ 
+_cons   18.0456 .0013956 1.3e+040.000 18.04286 18.04833
+
+Absorbed degrees of freedom:
+
+ Absorbed FE Categories - Redundant  = Num. Coefs
+
+ codigo_lote   812848   812848        0*
+        year       12        1       11 
+
+* = FE nested within cluster; treated as redundant for DoF computation
+
+. #d cr
+delimiter now cr
+. 
+. #d;
+delimiter now ;
+. reghdfe ln_avaluo_real_2014 
+>     c.post#c.inv_dist_plmb#c.economic_access, 
+>     a(codigo_lote year) 
+>     vce(cluster codigo_barrio);
+(dropped 718 )
+( converged in 5 iterations)
+
+HDFE Linear regressionNumber of obs= 27,888,717
+Absorbing 2 HDFE groupsF(   1,    950)=       7.18
+Statistics robust to heteroskedasticityProb > F=     0.0075
+R-squared=     0.5148
+Adj R-squared=     0.5002
+Within R-sq.=     0.0000
+Number of clusters (codigo_barrio) =        951Root MSE=     0.9131
+
+ clusters in )}
+
+    Robust
+                     ln_avaluo_real_2014 Coefficient  std. err.      t   P>|t|     [95% conf. interval]
+
+c.post#c.inv_dist_plmb#c.economic_access  23.07826 8.613221    2.680.008 6.175125  39.9814
+ 
+_cons  18.04985 .0001643 1.1e+050.000 18.04953 18.05017
+
+Absorbed degrees of freedom:
+
+ Absorbed FE Categories - Redundant  = Num. Coefs
+
+ codigo_lote   810472   810472        0*
+        year       12        1       11 
+
+* = FE nested within cluster; treated as redundant for DoF computation
+
+. #d cr
+delimiter now cr
+.         
+. margins, dydx(inv_dist_plmb) at(economic_access=(-0.2 0 0.1) post=1)
+
+Average marginal effects = 
+Model VCE: 
+
+ = }
+ = }
+ = }
+ = }
+ = }
+ = }
+
+ Delta-method
+      dy/dx   std. err.      z   P>|z|     [95% conf. interval]
+
+inv_dist_plmb 
+_at 
+1  -4.615653 1.722644   -2.680.007-7.991974-1.239332
+2          0  (empty)
+3   2.307826 .8613221    2.680.007  .619666 3.995987
+
+. 
+. *---------------------------------------------------------------*
+. * Centralidad por quintiles
+. *---------------------------------------------------------------*
+. 
+. #d;
+delimiter now ;
+.         reghdfe ln_avaluo_real_2014 c.treat##i.cbd_group, 
+>                 a(codigo_lote year)
+>                 vce(cluster codigo_barrio);
+(dropped 722 )
+( converged in 5 iterations)
+note: 2bn.cbd_group is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+note: 3bn.cbd_group is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+note: 4bn.cbd_group is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+note: 5bn.cbd_group is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+
+HDFE Linear regressionNumber of obs= 28,115,757
+Absorbing 2 HDFE groupsF(   5,    962)=      13.67
+Statistics robust to heteroskedasticityProb > F=     0.0000
+R-squared=     0.5141
+Adj R-squared=     0.4996
+Within R-sq.=     0.0001
+Number of clusters (codigo_barrio) =        963Root MSE=     0.9137
+
+ clusters in )}
+
+    Robust
+ln_avaluo_re~2014 Coefficient  std. err.      t   P>|t|     [95% conf. interval]
+
+treat -.0347371 .0139869   -2.480.013-.0621854-.0072887
+ 
+cbd_group 
+2          0  (omitted)
+3          0  (omitted)
+4          0  (omitted)
+5          0  (omitted)
+ 
+cbd_group#c.treat 
+2   .0919331 .0148831    6.180.000 .0627261 .1211401
+3   .0604815 .0160721    3.760.000 .0289411 .0920219
+4   .1189512 .0210893    5.640.000 .0775649 .1603376
+5   .0512089 .0289662    1.770.077-.0056354 .1080533
+ 
+_cons  18.04569 .0013854 1.3e+040.000 18.04297 18.04841
+
+Absorbed degrees of freedom:
+
+ Absorbed FE Categories - Redundant  = Num. Coefs
+
+ codigo_lote   812848   812848        0*
+        year       12        1       11 
+
+* = FE nested within cluster; treated as redundant for DoF computation
+
+. #d cr
+delimiter now cr
+. 
+. *---------------------------------------------------------------*
+. * Equipamientos
+. *---------------------------------------------------------------*
+. 
+. #d;
+delimiter now ;
+.         reghdfe ln_avaluo_real_2014 c.treat##c.amenities_index, 
+>                 a(codigo_lote year)
+>                 vce(cluster codigo_barrio);
+(dropped 824 )
+( converged in 5 iterations)
+note: amenities_index is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+
+HDFE Linear regressionNumber of obs= 29,529,246
+Absorbing 2 HDFE groupsF(   2,    987)=       3.91
+Statistics robust to heteroskedasticityProb > F=     0.0203
+R-squared=     0.5155
+Adj R-squared=     0.5015
+Within R-sq.=     0.0000
+Number of clusters (codigo_barrio) =        988Root MSE=     0.9222
+
+ clusters in )}
+
+    Robust
+      ln_avaluo_real_2014 Coefficient  std. err.      t   P>|t|     [95% conf. interval]
+
+treat  .0073271 .0110298    0.660.507-.0143174 .0289716
+amenities_index         0  (omitted)
+ 
+c.treat#c.amenities_index -.0221498 .0079261   -2.790.005-.0377037-.0065958
+ 
+_cons  18.02433 .0014651 1.2e+040.000 18.02145  18.0272
+
+Absorbed degrees of freedom:
+
+ Absorbed FE Categories - Redundant  = Num. Coefs
+
+ codigo_lote   828311   828311        0*
+        year       12        1       11 
+
+* = FE nested within cluster; treated as redundant for DoF computation
+
+. #d cr
+delimiter now cr
+. 
+. * Cerrar archivo log para guardar resultados. 
+. log close
+      name:  <unnamed>
+       log:  C:\Users\USUARIO\\Documents\GitHub\TIF_PLMB\Datos\outcomes\\modelos_heter.smcl
+  log type:  smcl
+ closed on:  26 Mar 2026, 02:07:15
+

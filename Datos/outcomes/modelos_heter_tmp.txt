@@ -1,0 +1,537 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:\Users\USUARIO\\Documents\GitHub\TIF_PLMB\Datos\outcomes\\modelos_heter.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}26 Mar 2026, 01:22:11
+{txt}
+{com}. 
+. *---------------------------------------------------------------*
+. * PCA
+. *---------------------------------------------------------------*
+. 
+. gen post = cond( year >= 2019, 1, 0)
+{txt}
+{com}. gen inv_dist_plmb = 1/(dist_plmb+1000)
+{txt}(2,258,705 missing values generated)
+
+{com}. 
+. #d;
+{txt}delimiter now ;
+{com}.         reghdfe ln_avaluo_real_2014 c.post##c.inv_dist_plmb##c.I_AccB, 
+>                 a(codigo_lote year)
+>                 vce(cluster codigo_barrio);
+{res}{txt}(dropped 480 {browse "http://scorreia.com/research/singletons.pdf":singleton observations})
+{res}{txt}({browse "http://scorreia.com/research/hdfe.pdf":MWFE estimator} converged in 5 iterations)
+{res}{txt}note: {res}post{txt} is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+{txt}note: {res}inv_dist_plmb{txt} is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+{txt}note: {res}I_AccB{txt} is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+{txt}note: {res}c.inv_dist_plmb#c.I_AccB{txt} is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+{res}
+{txt}HDFE Linear regression{col 51}Number of obs{col 67}= {res}23,320,842
+{txt}Absorbing 2 HDFE groups{col 51}F({res}   3{txt},{res}    939{txt}){col 67}= {res}     20.31
+{txt}Statistics robust to heteroskedasticity{col 51}Prob > F{col 67}= {res}    0.0000
+{txt}{col 51}R-squared{col 67}= {res}    0.5291
+{txt}{col 51}Adj R-squared{col 67}= {res}    0.5140
+{txt}{col 51}Within R-sq.{col 67}= {res}    0.0003
+{txt}{col 1}Number of clusters ({res}codigo_barrio{txt}) {col 30}= {res}       940{txt}{col 51}Root MSE{col 67}= {res}    0.8942
+
+{txt}{ralign 97:(Std. err. adjusted for {res:940} clusters in {res:codigo_barrio})}
+{hline 32}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 33}{c |}{col 45}    Robust
+{col 1}            ln_avaluo_real_2014{col 33}{c |} Coefficient{col 45}  std. err.{col 57}      t{col 65}   P>|t|{col 73}     [95% con{col 86}f. interval]
+{hline 32}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 27}post {c |}{col 33}{res}{space 2}        0{col 45}{txt}  (omitted)
+{space 18}inv_dist_plmb {c |}{col 33}{res}{space 2}        0{col 45}{txt}  (omitted)
+{space 31} {c |}
+{space 9}c.post#c.inv_dist_plmb {c |}{col 33}{res}{space 2} 1318.651{col 45}{space 2} 214.0407{col 56}{space 1}    6.16{col 65}{space 3}0.000{col 73}{space 4} 898.5978{col 86}{space 3} 1738.705
+{txt}{space 31} {c |}
+{space 25}I_AccB {c |}{col 33}{res}{space 2}        0{col 45}{txt}  (omitted)
+{space 31} {c |}
+{space 16}c.post#c.I_AccB {c |}{col 33}{res}{space 2} 1.085216{col 45}{space 2} .1695834{col 56}{space 1}    6.40{col 65}{space 3}0.000{col 73}{space 4} .7524095{col 86}{space 3} 1.418022
+{txt}{space 31} {c |}
+{space 7}c.inv_dist_plmb#c.I_AccB {c |}{col 33}{res}{space 2}        0{col 45}{txt}  (omitted)
+{space 31} {c |}
+c.post#c.inv_dist_plmb#c.I_AccB {c |}{col 33}{res}{space 2}-3202.536{col 45}{space 2} 555.4727{col 56}{space 1}   -5.77{col 65}{space 3}0.000{col 73}{space 4}-4292.648{col 86}{space 3}-2112.425
+{txt}{space 31} {c |}
+{space 26}_cons {c |}{col 33}{res}{space 2} 17.83737{col 45}{space 2} .0400742{col 56}{space 1}  445.11{col 65}{space 3}0.000{col 73}{space 4} 17.75872{col 86}{space 3} 17.91601
+{txt}{hline 32}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{txt}Absorbed degrees of freedom:
+{res}{col 1}{text}{hline 13}{c TT}{hline 12}{hline 12}{hline 14}{hline 1}{c TRC}
+{col 1}{text} Absorbed FE{col 14}{c |} Categories{col 27} - Redundant{col 39}  = Num. Coefs{col 54}{c |}
+{res}{col 1}{text}{hline 13}{c +}{hline 12}{hline 12}{hline 14}{hline 1}{c RT}
+{col 1}{text} codigo_lote{col 14}{c |}{space 1}   727128{col 27}{space 1}   727128{col 39}{result}{space 1}        0{col 53}{text}*{col 54}{c |}
+{res}{col 1}{text}        year{col 14}{c |}{space 1}       12{col 27}{space 1}        1{col 39}{result}{space 1}       11{col 53}{text} {col 54}{c |}
+{res}{col 1}{text}{hline 13}{c BT}{hline 12}{hline 12}{hline 14}{hline 1}{c BRC}
+* = FE nested within cluster; treated as redundant for DoF computation
+{res}{txt}
+{com}. #d cr
+{txt}delimiter now cr
+{com}. 
+. 
+. *---------------------------------------------------------------*
+. * Tratamiento continuo
+. *---------------------------------------------------------------*
+. 
+. #d;
+{txt}delimiter now ;
+{com}.         reghdfe ln_avaluo_real_2014 c.post##c.inv_dist_plmb, 
+>                 a(codigo_lote year)
+>                 vce(cluster codigo_barrio);
+{res}{txt}(dropped 722 {browse "http://scorreia.com/research/singletons.pdf":singleton observations})
+{res}{txt}({browse "http://scorreia.com/research/hdfe.pdf":MWFE estimator} converged in 5 iterations)
+{res}{txt}note: {res}post{txt} is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+{txt}note: {res}inv_dist_plmb{txt} is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+{res}
+{txt}HDFE Linear regression{col 51}Number of obs{col 67}= {res}28,115,757
+{txt}Absorbing 2 HDFE groups{col 51}F({res}   1{txt},{res}    962{txt}){col 67}= {res}     13.04
+{txt}Statistics robust to heteroskedasticity{col 51}Prob > F{col 67}= {res}    0.0003
+{txt}{col 51}R-squared{col 67}= {res}    0.5140
+{txt}{col 51}Adj R-squared{col 67}= {res}    0.4996
+{txt}{col 51}Within R-sq.{col 67}= {res}    0.0001
+{txt}{col 1}Number of clusters ({res}codigo_barrio{txt}) {col 30}= {res}       963{txt}{col 51}Root MSE{col 67}= {res}    0.9138
+
+{txt}{ralign 88:(Std. err. adjusted for {res:963} clusters in {res:codigo_barrio})}
+{hline 23}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 24}{c |}{col 36}    Robust
+{col 1}   ln_avaluo_real_2014{col 24}{c |} Coefficient{col 36}  std. err.{col 48}      t{col 56}   P>|t|{col 64}     [95% con{col 77}f. interval]
+{hline 23}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 18}post {c |}{col 24}{res}{space 2}        0{col 36}{txt}  (omitted)
+{space 9}inv_dist_plmb {c |}{col 24}{res}{space 2}        0{col 36}{txt}  (omitted)
+{space 22} {c |}
+c.post#c.inv_dist_plmb {c |}{col 24}{res}{space 2} 71.59154{col 36}{space 2} 19.82419{col 47}{space 1}    3.61{col 56}{space 3}0.000{col 64}{space 4} 32.68789{col 77}{space 3} 110.4952
+{txt}{space 22} {c |}
+{space 17}_cons {c |}{col 24}{res}{space 2} 18.03528{col 36}{space 2} .0029686{col 47}{space 1} 6075.40{col 56}{space 3}0.000{col 64}{space 4} 18.02945{col 77}{space 3}  18.0411
+{txt}{hline 23}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{txt}Absorbed degrees of freedom:
+{res}{col 1}{text}{hline 13}{c TT}{hline 12}{hline 12}{hline 14}{hline 1}{c TRC}
+{col 1}{text} Absorbed FE{col 14}{c |} Categories{col 27} - Redundant{col 39}  = Num. Coefs{col 54}{c |}
+{res}{col 1}{text}{hline 13}{c +}{hline 12}{hline 12}{hline 14}{hline 1}{c RT}
+{col 1}{text} codigo_lote{col 14}{c |}{space 1}   812848{col 27}{space 1}   812848{col 39}{result}{space 1}        0{col 53}{text}*{col 54}{c |}
+{res}{col 1}{text}        year{col 14}{c |}{space 1}       12{col 27}{space 1}        1{col 39}{result}{space 1}       11{col 53}{text} {col 54}{c |}
+{res}{col 1}{text}{hline 13}{c BT}{hline 12}{hline 12}{hline 14}{hline 1}{c BRC}
+* = FE nested within cluster; treated as redundant for DoF computation
+{res}{txt}
+{com}. #d cr
+{txt}delimiter now cr
+{com}. 
+. 
+. *---------------------------------------------------------------*
+. * Accesibilidad económica continua
+. *---------------------------------------------------------------*
+. 
+. * 1) Accesibilidad medida con promedio simple
+. #d;
+{txt}delimiter now ;
+{com}.         reghdfe ln_avaluo_real_2014 c.treat##c.economic_access, 
+>                 a(codigo_lote year)
+>                 vce(cluster codigo_barrio);
+{res}{txt}(dropped 824 {browse "http://scorreia.com/research/singletons.pdf":singleton observations})
+{res}{txt}({browse "http://scorreia.com/research/hdfe.pdf":MWFE estimator} converged in 5 iterations)
+{res}{txt}note: {res}economic_access{txt} is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+{res}
+{txt}HDFE Linear regression{col 51}Number of obs{col 67}= {res}29,529,246
+{txt}Absorbing 2 HDFE groups{col 51}F({res}   2{txt},{res}    987{txt}){col 67}= {res}      6.00
+{txt}Statistics robust to heteroskedasticity{col 51}Prob > F{col 67}= {res}    0.0026
+{txt}{col 51}R-squared{col 67}= {res}    0.5155
+{txt}{col 51}Adj R-squared{col 67}= {res}    0.5015
+{txt}{col 51}Within R-sq.{col 67}= {res}    0.0000
+{txt}{col 1}Number of clusters ({res}codigo_barrio{txt}) {col 30}= {res}       988{txt}{col 51}Root MSE{col 67}= {res}    0.9222
+
+{txt}{ralign 91:(Std. err. adjusted for {res:988} clusters in {res:codigo_barrio})}
+{hline 26}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 27}{c |}{col 39}    Robust
+{col 1}      ln_avaluo_real_2014{col 27}{c |} Coefficient{col 39}  std. err.{col 51}      t{col 59}   P>|t|{col 67}     [95% con{col 80}f. interval]
+{hline 26}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 20}treat {c |}{col 27}{res}{space 2}  -.00089{col 39}{space 2} .0106534{col 50}{space 1}   -0.08{col 59}{space 3}0.933{col 67}{space 4}-.0217959{col 80}{space 3} .0200159
+{txt}{space 10}economic_access {c |}{col 27}{res}{space 2}        0{col 39}{txt}  (omitted)
+{space 25} {c |}
+c.treat#c.economic_access {c |}{col 27}{res}{space 2} .0220601{col 39}{space 2} .0065928{col 50}{space 1}    3.35{col 59}{space 3}0.001{col 67}{space 4} .0091225{col 80}{space 3} .0349977
+{txt}{space 25} {c |}
+{space 20}_cons {c |}{col 27}{res}{space 2} 18.02429{col 39}{space 2} .0014245{col 50}{space 1} 1.3e+04{col 59}{space 3}0.000{col 67}{space 4}  18.0215{col 80}{space 3} 18.02709
+{txt}{hline 26}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{txt}Absorbed degrees of freedom:
+{res}{col 1}{text}{hline 13}{c TT}{hline 12}{hline 12}{hline 14}{hline 1}{c TRC}
+{col 1}{text} Absorbed FE{col 14}{c |} Categories{col 27} - Redundant{col 39}  = Num. Coefs{col 54}{c |}
+{res}{col 1}{text}{hline 13}{c +}{hline 12}{hline 12}{hline 14}{hline 1}{c RT}
+{col 1}{text} codigo_lote{col 14}{c |}{space 1}   828311{col 27}{space 1}   828311{col 39}{result}{space 1}        0{col 53}{text}*{col 54}{c |}
+{res}{col 1}{text}        year{col 14}{c |}{space 1}       12{col 27}{space 1}        1{col 39}{result}{space 1}       11{col 53}{text} {col 54}{c |}
+{res}{col 1}{text}{hline 13}{c BT}{hline 12}{hline 12}{hline 14}{hline 1}{c BRC}
+* = FE nested within cluster; treated as redundant for DoF computation
+{res}{txt}
+{com}. #d cr
+{txt}delimiter now cr
+{com}. 
+. * 2) Accesibilidad medida con gravedad
+. #d;
+{txt}delimiter now ;
+{com}.         reghdfe ln_avaluo_real_2014 c.treat##c.economic_access_gr, 
+>                 a(codigo_lote year)
+>                 vce(cluster codigo_barrio);
+{res}{txt}(dropped 824 {browse "http://scorreia.com/research/singletons.pdf":singleton observations})
+{res}{txt}({browse "http://scorreia.com/research/hdfe.pdf":MWFE estimator} converged in 5 iterations)
+{res}{txt}note: {res}economic_access_gr{txt} is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+{res}
+{txt}HDFE Linear regression{col 51}Number of obs{col 67}= {res}29,529,246
+{txt}Absorbing 2 HDFE groups{col 51}F({res}   2{txt},{res}    987{txt}){col 67}= {res}      0.10
+{txt}Statistics robust to heteroskedasticity{col 51}Prob > F{col 67}= {res}    0.9044
+{txt}{col 51}R-squared{col 67}= {res}    0.5155
+{txt}{col 51}Adj R-squared{col 67}= {res}    0.5015
+{txt}{col 51}Within R-sq.{col 67}= {res}    0.0000
+{txt}{col 1}Number of clusters ({res}codigo_barrio{txt}) {col 30}= {res}       988{txt}{col 51}Root MSE{col 67}= {res}    0.9222
+
+{txt}{ralign 94:(Std. err. adjusted for {res:988} clusters in {res:codigo_barrio})}
+{hline 29}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 30}{c |}{col 42}    Robust
+{col 1}         ln_avaluo_real_2014{col 30}{c |} Coefficient{col 42}  std. err.{col 54}      t{col 62}   P>|t|{col 70}     [95% con{col 83}f. interval]
+{hline 29}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 23}treat {c |}{col 30}{res}{space 2}-.0012081{col 42}{space 2} .0125504{col 53}{space 1}   -0.10{col 62}{space 3}0.923{col 70}{space 4}-.0258366{col 83}{space 3} .0234203
+{txt}{space 10}economic_access_gr {c |}{col 30}{res}{space 2}        0{col 42}{txt}  (omitted)
+{space 28} {c |}
+c.treat#c.economic_access_gr {c |}{col 30}{res}{space 2} .0035725{col 42}{space 2} .0085461{col 53}{space 1}    0.42{col 62}{space 3}0.676{col 70}{space 4}-.0131981{col 83}{space 3} .0203431
+{txt}{space 28} {c |}
+{space 23}_cons {c |}{col 30}{res}{space 2} 18.02432{col 42}{space 2} .0014711{col 53}{space 1} 1.2e+04{col 62}{space 3}0.000{col 70}{space 4} 18.02143{col 83}{space 3} 18.02721
+{txt}{hline 29}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{txt}Absorbed degrees of freedom:
+{res}{col 1}{text}{hline 13}{c TT}{hline 12}{hline 12}{hline 14}{hline 1}{c TRC}
+{col 1}{text} Absorbed FE{col 14}{c |} Categories{col 27} - Redundant{col 39}  = Num. Coefs{col 54}{c |}
+{res}{col 1}{text}{hline 13}{c +}{hline 12}{hline 12}{hline 14}{hline 1}{c RT}
+{col 1}{text} codigo_lote{col 14}{c |}{space 1}   828311{col 27}{space 1}   828311{col 39}{result}{space 1}        0{col 53}{text}*{col 54}{c |}
+{res}{col 1}{text}        year{col 14}{c |}{space 1}       12{col 27}{space 1}        1{col 39}{result}{space 1}       11{col 53}{text} {col 54}{c |}
+{res}{col 1}{text}{hline 13}{c BT}{hline 12}{hline 12}{hline 14}{hline 1}{c BRC}
+* = FE nested within cluster; treated as redundant for DoF computation
+{res}{txt}
+{com}. #d cr
+{txt}delimiter now cr
+{com}. 
+. * 3) Accesibilidad medida con decaimiento
+. #d;
+{txt}delimiter now ;
+{com}.         reghdfe ln_avaluo_real_2014 c.treat##c.economic_access_exp, 
+>                 a(codigo_lote year)
+>                 vce(cluster codigo_barrio);
+{res}{txt}(dropped 824 {browse "http://scorreia.com/research/singletons.pdf":singleton observations})
+{res}{txt}({browse "http://scorreia.com/research/hdfe.pdf":MWFE estimator} converged in 5 iterations)
+{res}{txt}note: {res}economic_access_exp{txt} is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+{res}
+{txt}HDFE Linear regression{col 51}Number of obs{col 67}= {res}29,529,246
+{txt}Absorbing 2 HDFE groups{col 51}F({res}   2{txt},{res}    987{txt}){col 67}= {res}      0.10
+{txt}Statistics robust to heteroskedasticity{col 51}Prob > F{col 67}= {res}    0.9067
+{txt}{col 51}R-squared{col 67}= {res}    0.5155
+{txt}{col 51}Adj R-squared{col 67}= {res}    0.5015
+{txt}{col 51}Within R-sq.{col 67}= {res}    0.0000
+{txt}{col 1}Number of clusters ({res}codigo_barrio{txt}) {col 30}= {res}       988{txt}{col 51}Root MSE{col 67}= {res}    0.9222
+
+{txt}{ralign 95:(Std. err. adjusted for {res:988} clusters in {res:codigo_barrio})}
+{hline 30}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 31}{c |}{col 43}    Robust
+{col 1}          ln_avaluo_real_2014{col 31}{c |} Coefficient{col 43}  std. err.{col 55}      t{col 63}   P>|t|{col 71}     [95% con{col 84}f. interval]
+{hline 30}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 24}treat {c |}{col 31}{res}{space 2} .0056754{col 43}{space 2} .0128801{col 54}{space 1}    0.44{col 63}{space 3}0.660{col 71}{space 4}   -.0196{col 84}{space 3} .0309509
+{txt}{space 10}economic_access_exp {c |}{col 31}{res}{space 2}        0{col 43}{txt}  (omitted)
+{space 29} {c |}
+c.treat#c.economic_access_exp {c |}{col 31}{res}{space 2}-.0012883{col 43}{space 2}  .004386{col 54}{space 1}   -0.29{col 63}{space 3}0.769{col 71}{space 4}-.0098953{col 84}{space 3} .0073187
+{txt}{space 29} {c |}
+{space 24}_cons {c |}{col 31}{res}{space 2} 18.02433{col 43}{space 2} .0014739{col 54}{space 1} 1.2e+04{col 63}{space 3}0.000{col 71}{space 4} 18.02143{col 84}{space 3} 18.02722
+{txt}{hline 30}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{txt}Absorbed degrees of freedom:
+{res}{col 1}{text}{hline 13}{c TT}{hline 12}{hline 12}{hline 14}{hline 1}{c TRC}
+{col 1}{text} Absorbed FE{col 14}{c |} Categories{col 27} - Redundant{col 39}  = Num. Coefs{col 54}{c |}
+{res}{col 1}{text}{hline 13}{c +}{hline 12}{hline 12}{hline 14}{hline 1}{c RT}
+{col 1}{text} codigo_lote{col 14}{c |}{space 1}   828311{col 27}{space 1}   828311{col 39}{result}{space 1}        0{col 53}{text}*{col 54}{c |}
+{res}{col 1}{text}        year{col 14}{c |}{space 1}       12{col 27}{space 1}        1{col 39}{result}{space 1}       11{col 53}{text} {col 54}{c |}
+{res}{col 1}{text}{hline 13}{c BT}{hline 12}{hline 12}{hline 14}{hline 1}{c BRC}
+* = FE nested within cluster; treated as redundant for DoF computation
+{res}{txt}
+{com}. #d cr
+{txt}delimiter now cr
+{com}. 
+. *---------------------------------------------------------------*
+. * Accesibilidad económica por quintiles
+. *---------------------------------------------------------------*
+. 
+. #d;
+{txt}delimiter now ;
+{com}.         reghdfe ln_avaluo_real_2014 c.treat##i.access_group, 
+>                 a(codigo_lote year)
+>                 vce(cluster codigo_barrio);
+{res}{txt}(dropped 824 {browse "http://scorreia.com/research/singletons.pdf":singleton observations})
+{res}{txt}({browse "http://scorreia.com/research/hdfe.pdf":MWFE estimator} converged in 5 iterations)
+{res}{txt}note: {res}2bn.access_group{txt} is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+{txt}note: {res}3bn.access_group{txt} is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+{txt}note: {res}4bn.access_group{txt} is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+{txt}note: {res}5bn.access_group{txt} is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+{res}
+{txt}HDFE Linear regression{col 51}Number of obs{col 67}= {res}29,529,246
+{txt}Absorbing 2 HDFE groups{col 51}F({res}   5{txt},{res}    987{txt}){col 67}= {res}      5.36
+{txt}Statistics robust to heteroskedasticity{col 51}Prob > F{col 67}= {res}    0.0001
+{txt}{col 51}R-squared{col 67}= {res}    0.5155
+{txt}{col 51}Adj R-squared{col 67}= {res}    0.5015
+{txt}{col 51}Within R-sq.{col 67}= {res}    0.0000
+{txt}{col 1}Number of clusters ({res}codigo_barrio{txt}) {col 30}= {res}       988{txt}{col 51}Root MSE{col 67}= {res}    0.9222
+
+{txt}{ralign 86:(Std. err. adjusted for {res:988} clusters in {res:codigo_barrio})}
+{hline 21}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 22}{c |}{col 34}    Robust
+{col 1} ln_avaluo_real_2014{col 22}{c |} Coefficient{col 34}  std. err.{col 46}      t{col 54}   P>|t|{col 62}     [95% con{col 75}f. interval]
+{hline 21}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 15}treat {c |}{col 22}{res}{space 2}-.0244893{col 34}{space 2} .0134561{col 45}{space 1}   -1.82{col 54}{space 3}0.069{col 62}{space 4}-.0508952{col 75}{space 3} .0019165
+{txt}{space 20} {c |}
+{space 8}access_group {c |}
+{space 18}2  {c |}{col 22}{res}{space 2}        0{col 34}{txt}  (omitted)
+{space 18}3  {c |}{col 22}{res}{space 2}        0{col 34}{txt}  (omitted)
+{space 18}4  {c |}{col 22}{res}{space 2}        0{col 34}{txt}  (omitted)
+{space 18}5  {c |}{col 22}{res}{space 2}        0{col 34}{txt}  (omitted)
+{space 20} {c |}
+access_group#c.treat {c |}
+{space 18}2  {c |}{col 22}{res}{space 2} .0355862{col 34}{space 2} .0121056{col 45}{space 1}    2.94{col 54}{space 3}0.003{col 62}{space 4} .0118306{col 75}{space 3} .0593418
+{txt}{space 18}3  {c |}{col 22}{res}{space 2} .0514111{col 34}{space 2} .0129684{col 45}{space 1}    3.96{col 54}{space 3}0.000{col 62}{space 4} .0259622{col 75}{space 3}   .07686
+{txt}{space 18}4  {c |}{col 22}{res}{space 2} .0099956{col 34}{space 2} .0137508{col 45}{space 1}    0.73{col 54}{space 3}0.467{col 62}{space 4}-.0169887{col 75}{space 3} .0369798
+{txt}{space 18}5  {c |}{col 22}{res}{space 2} .0553472{col 34}{space 2} .0149598{col 45}{space 1}    3.70{col 54}{space 3}0.000{col 62}{space 4} .0259906{col 75}{space 3} .0847039
+{txt}{space 20} {c |}
+{space 15}_cons {c |}{col 22}{res}{space 2}  18.0243{col 34}{space 2} .0014207{col 45}{space 1} 1.3e+04{col 54}{space 3}0.000{col 62}{space 4} 18.02151{col 75}{space 3} 18.02709
+{txt}{hline 21}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{txt}Absorbed degrees of freedom:
+{res}{col 1}{text}{hline 13}{c TT}{hline 12}{hline 12}{hline 14}{hline 1}{c TRC}
+{col 1}{text} Absorbed FE{col 14}{c |} Categories{col 27} - Redundant{col 39}  = Num. Coefs{col 54}{c |}
+{res}{col 1}{text}{hline 13}{c +}{hline 12}{hline 12}{hline 14}{hline 1}{c RT}
+{col 1}{text} codigo_lote{col 14}{c |}{space 1}   828311{col 27}{space 1}   828311{col 39}{result}{space 1}        0{col 53}{text}*{col 54}{c |}
+{res}{col 1}{text}        year{col 14}{c |}{space 1}       12{col 27}{space 1}        1{col 39}{result}{space 1}       11{col 53}{text} {col 54}{c |}
+{res}{col 1}{text}{hline 13}{c BT}{hline 12}{hline 12}{hline 14}{hline 1}{c BRC}
+* = FE nested within cluster; treated as redundant for DoF computation
+{res}{txt}
+{com}. #d cr
+{txt}delimiter now cr
+{com}. 
+. *---------------------------------------------------------------*
+. * Centralidad
+. *---------------------------------------------------------------*
+. 
+. #d;
+{txt}delimiter now ;
+{com}.         reghdfe ln_avaluo_real_2014 c.treat##c.ln_dist_cbd, 
+>                 a(codigo_lote year)
+>                 vce(cluster codigo_barrio);
+{res}{txt}(dropped 722 {browse "http://scorreia.com/research/singletons.pdf":singleton observations})
+{res}{txt}({browse "http://scorreia.com/research/hdfe.pdf":MWFE estimator} converged in 5 iterations)
+{res}{txt}note: {res}ln_dist_cbd{txt} is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+{res}
+{txt}HDFE Linear regression{col 51}Number of obs{col 67}= {res}28,115,757
+{txt}Absorbing 2 HDFE groups{col 51}F({res}   2{txt},{res}    962{txt}){col 67}= {res}     39.35
+{txt}Statistics robust to heteroskedasticity{col 51}Prob > F{col 67}= {res}    0.0000
+{txt}{col 51}R-squared{col 67}= {res}    0.5141
+{txt}{col 51}Adj R-squared{col 67}= {res}    0.4996
+{txt}{col 51}Within R-sq.{col 67}= {res}    0.0002
+{txt}{col 1}Number of clusters ({res}codigo_barrio{txt}) {col 30}= {res}       963{txt}{col 51}Root MSE{col 67}= {res}    0.9137
+
+{txt}{ralign 87:(Std. err. adjusted for {res:963} clusters in {res:codigo_barrio})}
+{hline 22}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 23}{c |}{col 35}    Robust
+{col 1}  ln_avaluo_real_2014{col 23}{c |} Coefficient{col 35}  std. err.{col 47}      t{col 55}   P>|t|{col 63}     [95% con{col 76}f. interval]
+{hline 22}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 16}treat {c |}{col 23}{res}{space 2} -.443234{col 35}{space 2} .0517369{col 46}{space 1}   -8.57{col 55}{space 3}0.000{col 63}{space 4}-.5447642{col 76}{space 3}-.3417038
+{txt}{space 10}ln_dist_cbd {c |}{col 23}{res}{space 2}        0{col 35}{txt}  (omitted)
+{space 21} {c |}
+c.treat#c.ln_dist_cbd {c |}{col 23}{res}{space 2} .0516238{col 35}{space 2} .0058332{col 46}{space 1}    8.85{col 55}{space 3}0.000{col 63}{space 4} .0401765{col 76}{space 3} .0630712
+{txt}{space 21} {c |}
+{space 16}_cons {c |}{col 23}{res}{space 2}  18.0456{col 35}{space 2} .0013956{col 46}{space 1} 1.3e+04{col 55}{space 3}0.000{col 63}{space 4} 18.04286{col 76}{space 3} 18.04833
+{txt}{hline 22}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{txt}Absorbed degrees of freedom:
+{res}{col 1}{text}{hline 13}{c TT}{hline 12}{hline 12}{hline 14}{hline 1}{c TRC}
+{col 1}{text} Absorbed FE{col 14}{c |} Categories{col 27} - Redundant{col 39}  = Num. Coefs{col 54}{c |}
+{res}{col 1}{text}{hline 13}{c +}{hline 12}{hline 12}{hline 14}{hline 1}{c RT}
+{col 1}{text} codigo_lote{col 14}{c |}{space 1}   812848{col 27}{space 1}   812848{col 39}{result}{space 1}        0{col 53}{text}*{col 54}{c |}
+{res}{col 1}{text}        year{col 14}{c |}{space 1}       12{col 27}{space 1}        1{col 39}{result}{space 1}       11{col 53}{text} {col 54}{c |}
+{res}{col 1}{text}{hline 13}{c BT}{hline 12}{hline 12}{hline 14}{hline 1}{c BRC}
+* = FE nested within cluster; treated as redundant for DoF computation
+{res}{txt}
+{com}. #d cr
+{txt}delimiter now cr
+{com}. 
+. #d;
+{txt}delimiter now ;
+{com}. reghdfe ln_avaluo_real_2014 
+>     c.post#c.inv_dist_plmb#c.economic_access, 
+>     a(codigo_lote year) 
+>     vce(cluster codigo_barrio);
+{res}{txt}(dropped 718 {browse "http://scorreia.com/research/singletons.pdf":singleton observations})
+{res}{txt}({browse "http://scorreia.com/research/hdfe.pdf":MWFE estimator} converged in 5 iterations)
+{res}
+{txt}HDFE Linear regression{col 51}Number of obs{col 67}= {res}27,888,717
+{txt}Absorbing 2 HDFE groups{col 51}F({res}   1{txt},{res}    950{txt}){col 67}= {res}      7.18
+{txt}Statistics robust to heteroskedasticity{col 51}Prob > F{col 67}= {res}    0.0075
+{txt}{col 51}R-squared{col 67}= {res}    0.5148
+{txt}{col 51}Adj R-squared{col 67}= {res}    0.5002
+{txt}{col 51}Within R-sq.{col 67}= {res}    0.0000
+{txt}{col 1}Number of clusters ({res}codigo_barrio{txt}) {col 30}= {res}       951{txt}{col 51}Root MSE{col 67}= {res}    0.9131
+
+{txt}{ralign 106:(Std. err. adjusted for {res:951} clusters in {res:codigo_barrio})}
+{hline 41}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 42}{c |}{col 54}    Robust
+{col 1}                     ln_avaluo_real_2014{col 42}{c |} Coefficient{col 54}  std. err.{col 66}      t{col 74}   P>|t|{col 82}     [95% con{col 95}f. interval]
+{hline 41}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+c.post#c.inv_dist_plmb#c.economic_access {c |}{col 42}{res}{space 2} 23.07826{col 54}{space 2} 8.613221{col 65}{space 1}    2.68{col 74}{space 3}0.008{col 82}{space 4} 6.175125{col 95}{space 3}  39.9814
+{txt}{space 40} {c |}
+{space 35}_cons {c |}{col 42}{res}{space 2} 18.04985{col 54}{space 2} .0001643{col 65}{space 1} 1.1e+05{col 74}{space 3}0.000{col 82}{space 4} 18.04953{col 95}{space 3} 18.05017
+{txt}{hline 41}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{txt}Absorbed degrees of freedom:
+{res}{col 1}{text}{hline 13}{c TT}{hline 12}{hline 12}{hline 14}{hline 1}{c TRC}
+{col 1}{text} Absorbed FE{col 14}{c |} Categories{col 27} - Redundant{col 39}  = Num. Coefs{col 54}{c |}
+{res}{col 1}{text}{hline 13}{c +}{hline 12}{hline 12}{hline 14}{hline 1}{c RT}
+{col 1}{text} codigo_lote{col 14}{c |}{space 1}   810472{col 27}{space 1}   810472{col 39}{result}{space 1}        0{col 53}{text}*{col 54}{c |}
+{res}{col 1}{text}        year{col 14}{c |}{space 1}       12{col 27}{space 1}        1{col 39}{result}{space 1}       11{col 53}{text} {col 54}{c |}
+{res}{col 1}{text}{hline 13}{c BT}{hline 12}{hline 12}{hline 14}{hline 1}{c BRC}
+* = FE nested within cluster; treated as redundant for DoF computation
+{res}{txt}
+{com}. #d cr
+{txt}delimiter now cr
+{com}.         
+. margins, dydx(inv_dist_plmb) at(economic_access=(-0.2 0 0.1) post=1)
+{res}
+{txt}{col 1}Average marginal effects{col 53}{lalign 13:Number of obs}{col 66} = {res}{ralign 10:27,888,717}
+{txt}{col 1}Model VCE: {res:Robust}
+
+{txt}{p2colset 1 13 13 2}{...}
+{p2col:Expression:}{res:Linear prediction, predict()}{p_end}
+{p2col:dy/dx wrt:}{res:inv_dist_plmb}{p_end}
+{p2colreset}{...}
+{lalign 7:1._at: }{space 0}{lalign 15:post} = {res:{ralign 3:1}}
+{lalign 7:}{space 0}{lalign 15:economic_access} = {res:{ralign 3:-.2}}
+{lalign 7:2._at: }{space 0}{lalign 15:post} = {res:{ralign 3:1}}
+{lalign 7:}{space 0}{lalign 15:economic_access} = {res:{ralign 3:0}}
+{lalign 7:3._at: }{space 0}{lalign 15:post} = {res:{ralign 3:1}}
+{lalign 7:}{space 0}{lalign 15:economic_access} = {res:{ralign 3:.1}}
+
+{res}{txt}{hline 14}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 15}{c |}{col 27} Delta-method
+{col 15}{c |}      dy/dx{col 27}   std. err.{col 39}      z{col 47}   P>|z|{col 55}     [95% con{col 68}f. interval]
+{hline 14}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}inv_dist_plmb {txt}{c |}
+{space 10}_at {c |}
+{space 11}1  {c |}{col 15}{res}{space 2}-4.615653{col 27}{space 2} 1.722644{col 38}{space 1}   -2.68{col 47}{space 3}0.007{col 55}{space 4}-7.991974{col 68}{space 3}-1.239332
+{txt}{space 11}2  {c |}{col 15}{res}{space 2}        0{col 27}{txt}  (empty)
+{space 11}3  {c |}{col 15}{res}{space 2} 2.307826{col 27}{space 2} .8613221{col 38}{space 1}    2.68{col 47}{space 3}0.007{col 55}{space 4}  .619666{col 68}{space 3} 3.995987
+{txt}{hline 14}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. *---------------------------------------------------------------*
+. * Centralidad por quintiles
+. *---------------------------------------------------------------*
+. 
+. #d;
+{txt}delimiter now ;
+{com}.         reghdfe ln_avaluo_real_2014 c.treat##i.cbd_group, 
+>                 a(codigo_lote year)
+>                 vce(cluster codigo_barrio);
+{res}{txt}(dropped 722 {browse "http://scorreia.com/research/singletons.pdf":singleton observations})
+{res}{txt}({browse "http://scorreia.com/research/hdfe.pdf":MWFE estimator} converged in 5 iterations)
+{res}{txt}note: {res}2bn.cbd_group{txt} is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+{txt}note: {res}3bn.cbd_group{txt} is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+{txt}note: {res}4bn.cbd_group{txt} is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+{txt}note: {res}5bn.cbd_group{txt} is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+{res}
+{txt}HDFE Linear regression{col 51}Number of obs{col 67}= {res}28,115,757
+{txt}Absorbing 2 HDFE groups{col 51}F({res}   5{txt},{res}    962{txt}){col 67}= {res}     13.67
+{txt}Statistics robust to heteroskedasticity{col 51}Prob > F{col 67}= {res}    0.0000
+{txt}{col 51}R-squared{col 67}= {res}    0.5141
+{txt}{col 51}Adj R-squared{col 67}= {res}    0.4996
+{txt}{col 51}Within R-sq.{col 67}= {res}    0.0001
+{txt}{col 1}Number of clusters ({res}codigo_barrio{txt}) {col 30}= {res}       963{txt}{col 51}Root MSE{col 67}= {res}    0.9137
+
+{txt}{ralign 83:(Std. err. adjusted for {res:963} clusters in {res:codigo_barrio})}
+{hline 18}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 19}{c |}{col 31}    Robust
+{col 1}ln_avaluo_re~2014{col 19}{c |} Coefficient{col 31}  std. err.{col 43}      t{col 51}   P>|t|{col 59}     [95% con{col 72}f. interval]
+{hline 18}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 12}treat {c |}{col 19}{res}{space 2}-.0347371{col 31}{space 2} .0139869{col 42}{space 1}   -2.48{col 51}{space 3}0.013{col 59}{space 4}-.0621854{col 72}{space 3}-.0072887
+{txt}{space 17} {c |}
+{space 8}cbd_group {c |}
+{space 15}2  {c |}{col 19}{res}{space 2}        0{col 31}{txt}  (omitted)
+{space 15}3  {c |}{col 19}{res}{space 2}        0{col 31}{txt}  (omitted)
+{space 15}4  {c |}{col 19}{res}{space 2}        0{col 31}{txt}  (omitted)
+{space 15}5  {c |}{col 19}{res}{space 2}        0{col 31}{txt}  (omitted)
+{space 17} {c |}
+cbd_group#c.treat {c |}
+{space 15}2  {c |}{col 19}{res}{space 2} .0919331{col 31}{space 2} .0148831{col 42}{space 1}    6.18{col 51}{space 3}0.000{col 59}{space 4} .0627261{col 72}{space 3} .1211401
+{txt}{space 15}3  {c |}{col 19}{res}{space 2} .0604815{col 31}{space 2} .0160721{col 42}{space 1}    3.76{col 51}{space 3}0.000{col 59}{space 4} .0289411{col 72}{space 3} .0920219
+{txt}{space 15}4  {c |}{col 19}{res}{space 2} .1189512{col 31}{space 2} .0210893{col 42}{space 1}    5.64{col 51}{space 3}0.000{col 59}{space 4} .0775649{col 72}{space 3} .1603376
+{txt}{space 15}5  {c |}{col 19}{res}{space 2} .0512089{col 31}{space 2} .0289662{col 42}{space 1}    1.77{col 51}{space 3}0.077{col 59}{space 4}-.0056354{col 72}{space 3} .1080533
+{txt}{space 17} {c |}
+{space 12}_cons {c |}{col 19}{res}{space 2} 18.04569{col 31}{space 2} .0013854{col 42}{space 1} 1.3e+04{col 51}{space 3}0.000{col 59}{space 4} 18.04297{col 72}{space 3} 18.04841
+{txt}{hline 18}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{txt}Absorbed degrees of freedom:
+{res}{col 1}{text}{hline 13}{c TT}{hline 12}{hline 12}{hline 14}{hline 1}{c TRC}
+{col 1}{text} Absorbed FE{col 14}{c |} Categories{col 27} - Redundant{col 39}  = Num. Coefs{col 54}{c |}
+{res}{col 1}{text}{hline 13}{c +}{hline 12}{hline 12}{hline 14}{hline 1}{c RT}
+{col 1}{text} codigo_lote{col 14}{c |}{space 1}   812848{col 27}{space 1}   812848{col 39}{result}{space 1}        0{col 53}{text}*{col 54}{c |}
+{res}{col 1}{text}        year{col 14}{c |}{space 1}       12{col 27}{space 1}        1{col 39}{result}{space 1}       11{col 53}{text} {col 54}{c |}
+{res}{col 1}{text}{hline 13}{c BT}{hline 12}{hline 12}{hline 14}{hline 1}{c BRC}
+* = FE nested within cluster; treated as redundant for DoF computation
+{res}{txt}
+{com}. #d cr
+{txt}delimiter now cr
+{com}. 
+. *---------------------------------------------------------------*
+. * Equipamientos
+. *---------------------------------------------------------------*
+. 
+. #d;
+{txt}delimiter now ;
+{com}.         reghdfe ln_avaluo_real_2014 c.treat##c.amenities_index, 
+>                 a(codigo_lote year)
+>                 vce(cluster codigo_barrio);
+{res}{txt}(dropped 824 {browse "http://scorreia.com/research/singletons.pdf":singleton observations})
+{res}{txt}({browse "http://scorreia.com/research/hdfe.pdf":MWFE estimator} converged in 5 iterations)
+{res}{txt}note: {res}amenities_index{txt} is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+{res}
+{txt}HDFE Linear regression{col 51}Number of obs{col 67}= {res}29,529,246
+{txt}Absorbing 2 HDFE groups{col 51}F({res}   2{txt},{res}    987{txt}){col 67}= {res}      3.91
+{txt}Statistics robust to heteroskedasticity{col 51}Prob > F{col 67}= {res}    0.0203
+{txt}{col 51}R-squared{col 67}= {res}    0.5155
+{txt}{col 51}Adj R-squared{col 67}= {res}    0.5015
+{txt}{col 51}Within R-sq.{col 67}= {res}    0.0000
+{txt}{col 1}Number of clusters ({res}codigo_barrio{txt}) {col 30}= {res}       988{txt}{col 51}Root MSE{col 67}= {res}    0.9222
+
+{txt}{ralign 91:(Std. err. adjusted for {res:988} clusters in {res:codigo_barrio})}
+{hline 26}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 27}{c |}{col 39}    Robust
+{col 1}      ln_avaluo_real_2014{col 27}{c |} Coefficient{col 39}  std. err.{col 51}      t{col 59}   P>|t|{col 67}     [95% con{col 80}f. interval]
+{hline 26}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 20}treat {c |}{col 27}{res}{space 2} .0073271{col 39}{space 2} .0110298{col 50}{space 1}    0.66{col 59}{space 3}0.507{col 67}{space 4}-.0143174{col 80}{space 3} .0289716
+{txt}{space 10}amenities_index {c |}{col 27}{res}{space 2}        0{col 39}{txt}  (omitted)
+{space 25} {c |}
+c.treat#c.amenities_index {c |}{col 27}{res}{space 2}-.0221498{col 39}{space 2} .0079261{col 50}{space 1}   -2.79{col 59}{space 3}0.005{col 67}{space 4}-.0377037{col 80}{space 3}-.0065958
+{txt}{space 25} {c |}
+{space 20}_cons {c |}{col 27}{res}{space 2} 18.02433{col 39}{space 2} .0014651{col 50}{space 1} 1.2e+04{col 59}{space 3}0.000{col 67}{space 4} 18.02145{col 80}{space 3}  18.0272
+{txt}{hline 26}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{txt}Absorbed degrees of freedom:
+{res}{col 1}{text}{hline 13}{c TT}{hline 12}{hline 12}{hline 14}{hline 1}{c TRC}
+{col 1}{text} Absorbed FE{col 14}{c |} Categories{col 27} - Redundant{col 39}  = Num. Coefs{col 54}{c |}
+{res}{col 1}{text}{hline 13}{c +}{hline 12}{hline 12}{hline 14}{hline 1}{c RT}
+{col 1}{text} codigo_lote{col 14}{c |}{space 1}   828311{col 27}{space 1}   828311{col 39}{result}{space 1}        0{col 53}{text}*{col 54}{c |}
+{res}{col 1}{text}        year{col 14}{c |}{space 1}       12{col 27}{space 1}        1{col 39}{result}{space 1}       11{col 53}{text} {col 54}{c |}
+{res}{col 1}{text}{hline 13}{c BT}{hline 12}{hline 12}{hline 14}{hline 1}{c BRC}
+* = FE nested within cluster; treated as redundant for DoF computation
+{res}{txt}
+{com}. #d cr
+{txt}delimiter now cr
+{com}. 
+. * Cerrar archivo log para guardar resultados. 
+. log close
+      {txt}name:  {res}<unnamed>
+       {txt}log:  {res}C:\Users\USUARIO\\Documents\GitHub\TIF_PLMB\Datos\outcomes\\modelos_heter.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res}26 Mar 2026, 02:07:15
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}
