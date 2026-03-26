@@ -19,7 +19,7 @@ set more off
 
 ** Path
 global dir_0 "C:\Users\USUARIO\\"
-//global dir_0 "C:\Users\proyecto\\"
+global dir_0 "C:\Users\proyecto\\"
 
 ** Data
 global dir_data "${dir_0}OneDrive - Universidad de los andes\RA Andes - TIF\Datos\\"
@@ -70,7 +70,8 @@ save `cbd', replace
 import delim "${dir_0}OneDrive - Universidad de los andes\ARCHIV~2\1D280~1.ENT\ENTREG~3\MEMORI~1\DISTAN~1\DISTAN~4.CSV", clear
 
 ** En este archivo los códigos de manzana ya están correctos 
-ren total_length dist_plmb
+cap ren total_length dist_plmb
+cap ren total_leng dist_plmb
 
 ** Revisar distribución de la variable de distancia para crear las cohortes
 centile dist_plmb, centile( 5 25 50 75 95 )
@@ -125,8 +126,12 @@ save `tm', replace
 
 import delim "${dir_0}OneDrive - Universidad de los andes\ARCHIV~2\1D280~1.ENT\ENTREG~3\MEMORI~1\DISTAN~1\DISTAN~1.CSV", clear
 
-** En este archivo los códigos de manzana ya están correctos
-ren total_length dist_malla
+** Crear codigos String 
+cap tostring man_codigo, gen(man_codigo_str)
+
+** Agregar leading 0 donde no esté
+replace man_codigo_str = "00" + man_codigo_str if strlen(man_codigo_str) == 7
+ren (man_codigo man_codigo_str total_leng) (man_codigo_og man_codigo dist_malla)
 
 ** Revisar distribución de la variable de distancia para crear las cohortes
 centile dist_malla, centile( 5 25 50 75 95 )
