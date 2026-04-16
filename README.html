@@ -359,8 +359,9 @@ display: none;
 <h1>Análisis de Factibilidad TIF para la PLMB</h1>
 <div id="modelación-econométrica-y-geoespacial-en-stata" class="section level2">
 <h2>Modelación Econométrica y Geoespacial en Stata</h2>
-<p><strong>Autora:</strong> Maria Corina Hernandez<br />
-<strong>Fecha:</strong> Febrero 2026</p>
+<p><strong>Autora:</strong> Maria Corina Hernandez
+<strong>E-mail:</strong> <a href="mailto:mc.hernandezl12@uniandes.edu.co" class="email">mc.hernandezl12@uniandes.edu.co</a>
+<strong>Fecha:</strong> Febrero–Marzo 2026</p>
 <hr />
 </div>
 <div id="descripción-del-proyecto" class="section level2">
@@ -370,107 +371,563 @@ valor del avalúo catastral en el área de influencia de la Primera Línea
 del Metro de Bogotá (PLMB). El objetivo central es evaluar la viabilidad
 del instrumento <strong>Tax Increment Financing (TIF)</strong> para
 financiar la extensión de la línea, utilizando un panel de datos
-catastrales (2014-2025).</p>
+catastrales de la UAECD (2014–2025).</p>
+<p>La estrategia de identificación es un modelo de <strong>Diferencias
+en Diferencias (DiD)</strong> que compara la evolución de los avalúos
+catastrales entre predios dentro y fuera del área de influencia del
+metro, antes y después del anuncio/contratación del proyecto (2019).</p>
+<hr />
 </div>
 <div id="estructura-del-repositorio" class="section level2">
 <h2>Estructura del Repositorio</h2>
-<p>Para el correcto funcionamiento de los dofiles, el repositorio debe
-mantener la siguiente estructura de carpetas:</p>
-<ul>
-<li><strong><code>/Codigos</code></strong>: Contiene los archivos
-<code>.do</code> analizados en este documento.</li>
-<li><strong><code>/Datos</code></strong>:
-<ul>
-<li><strong><code>/raw</code></strong>: Bases prediales anuales de la
-UAECD (CSV) y capas geográficas (Shapefiles/DBF) procesadas en ArcGIS
-con los <em>buffers</em> de tratamiento.</li>
-<li><strong><code>/processed</code></strong>: Archivos en formato
-<code>.dta</code> generados tras la limpieza y el pegado
-(<em>merge</em>) de datos.</li>
-<li><strong><code>/outcomes</code></strong>: Resultados finales de la
-investigación.</li>
-</ul></li>
-</ul>
+<pre><code>TIF_PLMB/
+├── Código/                          → Do-files de Stata (ver sección siguiente)
+├── Datos/
+│   ├── raw/
+│   │   ├── INFORMACIÓN CATASTRAL Y PREDIAL/   → PREDIO_FINAL_20YY.csv (2014–2025)
+│   │   ├── SHAPES/                            → Shapefiles y DBFs de ArcGIS
+│   │   │   ├── Lotes_catastrales.gdb.zip.gdrive/
+│   │   │   ├── Lotes_catastrales_treatment/   → Buffers 400/800/1200m
+│   │   │   ├── Lotes_catastrales_treat_robust/
+│   │   │   ├── manzanas_contrafac.csv
+│   │   │   ├── manzanas_linea_interv.csv
+│   │   │   └── manzanas_AI_vias_tramos.csv
+│   │   ├── EM2021_800m_PLMB/                  → Datos de empleo 2021
+│   │   └── Nueva Área de Influencia/          → BASE_NUEVA_AI_20YY.csv (2014–2025)
+│   ├── processed/                   → Archivos .dta generados por los do-files
+│   └── outcomes/                    → Tablas (.docx) y gráficos (.pdf) finales
+├── inflacion.xlsx                   → IPC mensual 2014–2025 (DANE)
+├── README.md</code></pre>
+<hr />
 </div>
 <div id="estructura-del-código-.do-files" class="section level2">
 <h2>Estructura del Código (.do files)</h2>
-<p>El flujo de trabajo se divide en cinco etapas principales:</p>
-<ol style="list-style-type: decimal">
-<li><strong><code>1_append_merge.do</code></strong>: Limpieza y
-estandarización de la base catastral anual de la UAECD. Crea un panel
-balanceado y lo vincula con la información geográfica (Shapefiles).</li>
-<li><strong><code>2_analysis_did.do</code></strong>: Implementación del
-modelo de <strong>Diferencias en Diferencias (DiD)</strong>. Incluye la
-deflactación de avalúos a precios constantes de 2014 y estimaciones de
-efectos fijos por lote y año.</li>
-<li><strong><code>3_analysis_did_heter.do</code></strong>: Análisis de
-heterogeneidad por tramo y por destino económico (Residencial,
-Comercial, Industrial, etc.).</li>
-<li><strong><code>4_analysis_cem.do</code></strong>: Aplicación de
-<strong>Coarsened Exact Matching (CEM)</strong> para mejorar la
-comparabilidad entre el grupo de tratamiento y control, controlando por
-distancias al CBD, Transmilenio y Malla Vial.</li>
-<li><strong><code>5_robustez.do</code></strong>: Pruebas de sensibilidad
-utilizando diferentes radios de influencia (<em>buffers</em>) de 400m,
-800m y 1200m.</li>
-</ol>
+<p>El flujo de trabajo se divide en nueve etapas principales:</p>
+<div id="etapa-1-preparación-de-datos" class="section level3">
+<h3>Etapa 1 — Preparación de Datos</h3>
+<p><strong><code>1_append_merge.do</code></strong> Limpieza y
+estandarización de las 12 bases catastrales anuales de la UAECD. Crea un
+panel balanceado (solo predios observados los 12 años) y lo vincula con
+la información geográfica de tratamiento proveniente de ArcGIS.</p>
+<ul>
+<li><strong>Entrada:</strong> <code>PREDIO_FINAL_20YY.csv</code>
+(2014–2025), <code>Lotes_catastrales.dbf</code></li>
+<li><strong>Salida:</strong> <code>predios_completos.dta</code>,
+<code>predios_balanceado.dta</code>,
+<code>predios_tratamiento_shp.dta</code>, <code>predios.dta</code></li>
+</ul>
+</div>
+<div id="etapa-2-modelo-did-principal" class="section level3">
+<h3>Etapa 2 — Modelo DiD Principal</h3>
+<p><strong><code>2_analysis_did.do</code></strong> Implementación del
+modelo de Diferencias en Diferencias. Deflacta los avalúos a precios
+constantes de 2014 usando el IPC de diciembre de cada año, genera el
+logaritmo natural de los valores reales, y estima el efecto promedio del
+tratamiento (ATT) con efectos fijos de lote y año. Incluye un event
+study (ventanas dinámicas 2014–2025) para verificar tendencias
+paralelas.</p>
+<ul>
+<li><strong>Entrada:</strong> <code>predios.dta</code>,
+<code>inflacion.xlsx</code></li>
+<li><strong>Salida:</strong> <code>predios_proc.dta</code>,
+<code>DID_simple.docx</code> (parcial),
+<code>DiD_windows_1200.pdf</code>,
+<code>DiD_windows_com_1200.pdf</code>,
+<code>DiD_windows_filter.pdf</code></li>
+</ul>
+</div>
+<div id="etapa-3a-atributos-físicos" class="section level3">
+<h3>Etapa 3a — Atributos Físicos</h3>
+<p><strong><code>3_analysis_did_atributes.do</code></strong> Analiza si
+el tratamiento está asociado a cambios en atributos físicos de los
+predios (área construida, número de pisos), tanto a nivel de predio como
+de manzana. Incluye un diseño de discontinuidad espacial con el Área de
+Influencia de Manzanas (AIM).</p>
+<ul>
+<li><strong>Entrada:</strong> <code>predios_proc.dta</code>,
+<code>manzanas_linea_interv.csv</code>,
+<code>manzanas_uso_suelo.dta</code>,
+<code>manzanas_treat_aim.csv</code>,
+<code>manzanas_untreat_aim_donut.csv</code></li>
+<li><strong>Salida:</strong> <code>manzanas_proc.dta</code>,
+<code>DID_atributes.docx</code>, <code>DID_atributes_aim.docx</code>,
+<code>DiD_windows_area.pdf</code></li>
+</ul>
+</div>
+<div id="etapa-3b-efectos-heterogéneos-destino-estrato-tramo" class="section level3">
+<h3>Etapa 3b — Efectos Heterogéneos (Destino, Estrato, Tramo)</h3>
+<p><strong><code>3_analysis_did_heter.do</code></strong> Estima efectos
+heterogéneos del tratamiento según destino económico del predio
+(residencial, comercial, industrial, dotacional, etc.), estrato
+socioeconómico y tramo de la línea. Los destinos y estratos se fijan al
+periodo pre-tratamiento para evitar endogeneidad por cambio de uso.</p>
+<ul>
+<li><strong>Entrada:</strong> <code>predios_proc.dta</code></li>
+<li><strong>Salida:</strong> <code>DID_heter_dest.docx</code>,
+<code>DID_heter_estr.docx</code>, <code>DID_heter_dest_res.docx</code>,
+<code>DID_heter_tram.docx</code>, <code>DiD_windows_tram.pdf</code></li>
+</ul>
+</div>
+<div id="etapa-4-coarsened-exact-matching-cem" class="section level3">
+<h3>Etapa 4 — Coarsened Exact Matching (CEM)</h3>
+<p><strong><code>4_analysis_cem.do</code></strong> Aplica CEM para
+mejorar la comparabilidad entre grupos de tratamiento y control, usando
+como covariables de matching: estrato, área construida, número de pisos,
+destino económico y distancias al CBD, Transmilenio, malla vial y
+trazado PLMB (todas en quintiles). El matching se realiza sobre el corte
+transversal de 2018 (último año pre-tratamiento). Los pesos se fusionan
+al panel completo para la estimación DiD ponderada.</p>
+<ul>
+<li><strong>Entrada:</strong> <code>predios_proc.dta</code>,
+<code>Distancias_Manzanas-CBD.csv</code>,
+<code>Distancias_Manzanas-TrazadoPLMB.csv</code>,
+<code>Distancias_Manzanas-TM.csv</code>,
+<code>Distancias_Manzanas-MallaVialArterial.csv</code></li>
+<li><strong>Salida:</strong> <code>treat_CEM.dta</code>,
+<code>treat_weights.dta</code>, <code>DID_CEM.docx</code></li>
+</ul>
+</div>
+<div id="etapa-5-análisis-exploratorio-distintos-buffers" class="section level3">
+<h3>Etapa 5 — Análisis Exploratorio: Distintos Buffers</h3>
+<p><strong><code>5_robustez.do</code></strong> Corre el modelo DiD para
+buffers de 400m y 1200m usando una segunda definición de shapefiles de
+tratamiento (<code>Lotes_catastrales_treat_robust</code>). Este
+ejercicio fue realizado para explorar sensibilidad a distintos radios
+por solicitud del equipo; no constituye la especificación base.</p>
+<ul>
+<li><strong>Entrada:</strong> <code>predios_proc.dta</code>,
+<code>Lotes_catastrales_treat_robust.dbf</code></li>
+<li><strong>Salida:</strong> <code>predios_robust.dta</code>,
+<code>DID_simple.docx</code> (con columnas 400m y 1200m)</li>
+</ul>
+</div>
+<div id="etapa-6-nueva-área-de-influencia-especificación-por-defecto" class="section level3">
+<h3>Etapa 6 — Nueva Área de Influencia (especificación por defecto)</h3>
+<p><strong><code>6_nueva_ai.do</code></strong> Replica el pipeline
+completo (preparación, deflactación, DiD base, heterogeneidad por
+destino, estrato y tramo) usando la <strong>nueva área de
+influencia</strong> como grupo de tratamiento. A diferencia de un buffer
+de radio fijo, esta área está delimitada por avenidas y vías importantes
+cercanas al corredor del metro. Fue sugerida por entidades
+gubernamentales para dar soporte legal a la delimitación: respeta la
+geometría urbana (no corta manzanas a la mitad) y es la
+<strong>definición por defecto para todos los análisis que siguen a este
+archivo</strong>.</p>
+<p>El grupo de control es el conjunto de predios del universo catastral
+de Bogotá fuera del área de influencia (ciudad completa menos el grupo
+de tratamiento).</p>
+<ul>
+<li><strong>Entrada:</strong> <code>BASE_NUEVA_AI_20YY.csv</code>
+(2014–2025), <code>predios_completos.dta</code>,
+<code>Lotes_catastrales.dbf</code>, <code>inflacion.xlsx</code>,
+<code>manzanas_AI_vias_tramos.csv</code></li>
+<li><strong>Salida:</strong> <code>predios_proc_ai2.dta</code>,
+<code>DID_heter_dest.docx</code> (col. “AI Vías”),
+<code>DID_heter_estr.docx</code> (col. “AI Vías”),
+<code>DID_heter_tram.docx</code> (col. “AI Vías”)</li>
+</ul>
+</div>
+<div id="etapa-7-índices-de-accesibilidad-urbana" class="section level3">
+<h3>Etapa 7 — Índices de Accesibilidad Urbana</h3>
+<p><strong><code>7_centralidades.do</code></strong> Construye índices de
+accesibilidad urbana a nivel de manzana usando una base de datos de
+Bogotá (<code>base_bogota_270221.dta</code>). Genera tres tipos de
+índices:</p>
+<ul>
+<li><strong>Accesibilidad de transporte:</strong> promedio simple, tipo
+gravedad (γ=0.5) y decaimiento exponencial (λ=0.01) de distancias
+inversas a vías troncales, locales e intermedias.</li>
+<li><strong>Acceso económico:</strong> log(empleo) × índice de
+transporte.</li>
+<li><strong>Equipamientos (amenidades):</strong> índice de distancias
+inversas a equipamientos de educación, salud, recreación, etc.</li>
+<li><strong>Índice compuesto I_AccB:</strong> análisis de componentes
+principales (PCA) sobre 17 variables de distancia/accesibilidad, con
+ponderación por eigenvalor; produce 4 dimensiones (accesibilidad
+estructural, periferia-ruralidad, capilaridad urbana, corredores
+específicos).</li>
+</ul>
+<p>Los índices se pegan a <code>predios_proc_ai2.dta</code> para su uso
+en análisis de heterogeneidad.</p>
+<ul>
+<li><strong>Entrada:</strong> <code>predios_proc_ai2.dta</code>,
+<code>Distancias_Manzanas-*.csv</code>,
+<code>base_bogota_270221.dta</code></li>
+<li><strong>Salida:</strong> <code>manzanas_access.dta</code>,
+estimaciones de heterogeneidad con accesibilidad continua</li>
+</ul>
+</div>
+<div id="etapa-8-robustez-grupo-de-control-alternativo" class="section level3">
+<h3>Etapa 8 — Robustez: Grupo de Control Alternativo</h3>
+<p><strong><code>8_robustez_control.do</code></strong> Prueba de
+sensibilidad a la definición del grupo de control. En lugar de usar toda
+la ciudad como control (especificación base), este archivo define un
+contrafactual espacialmente acotado: las manzanas dentro de un
+<strong>buffer de 1500m alrededor de la nueva área de
+influencia</strong> pero por fuera del área de tratamiento. Esto reduce
+la posibilidad de que el grupo de control capture dinámicas urbanas muy
+distintas al corredor del metro, a costa de reducir el tamaño del grupo
+de control.</p>
+<ul>
+<li><strong>Entrada:</strong> <code>predios_proc_ai2.dta</code>,
+<code>manzanas_contrafac.csv</code> (manzanas en el anillo 1500m
+alrededor de la nueva AI), <code>manzanas_AI_vias_tramos.csv</code></li>
+<li><strong>Salida:</strong> Estimaciones DiD con control restringido al
+anillo perimetral (heterogeneidad por destino, estrato y tramo)</li>
+</ul>
+</div>
+<div id="etapa-9-heterogeneidad-por-destinoestrato-accesibilidad" class="section level3">
+<h3>Etapa 9 — Heterogeneidad por Destino/Estrato × Accesibilidad</h3>
+<p><strong><code>9_heter_access.do</code></strong> Estima efectos
+heterogéneos de tercer orden:
+<code>treat × destino económico × accesibilidad</code> y
+<code>treat × estrato × accesibilidad</code>. Responde si el efecto
+diferencial del metro sobre cada tipo de predio varía según el nivel de
+accesibilidad urbana preexistente de la manzana. Relevante para TIF:
+identifica si la base imponible capturable se concentra en zonas de alta
+o baja accesibilidad.</p>
+<ul>
+<li><strong>Entrada:</strong> <code>predios_proc_ai2.dta</code>,
+<code>manzanas_access.dta</code></li>
+<li><strong>Salida:</strong> <code>DID_heter_dest_access.docx</code>,
+<code>DID_heter_estr_access.docx</code>,
+<code>DiD_heter_dest_access.pdf</code></li>
+</ul>
+<hr />
+</div>
 </div>
 <div id="metodología" class="section level2">
 <h2>Metodología</h2>
-<p>La estimación principal utiliza la especificación
-<code>reghdfe</code> para controlar por efectos fijos de alto nivel:</p>
+<div id="especificación-principal" class="section level3">
+<h3>Especificación Principal</h3>
 <pre class="stata"><code>reghdfe ln_avaluo_real_2014 treat, a(codigo_lote year) vce(cluster codigo_barrio)</code></pre>
-<p>Se excluyen explícitamente predios públicos, vías y lotes del estado
-para evitar sesgos en la estimación de la plusvalía capturable.</p>
+<p>Donde: - <strong>Variable dependiente:</strong>
+<code>ln_avaluo_real_2014</code> — logaritmo del avalúo catastral en
+pesos constantes de 2014 - <strong>Variable de tratamiento:</strong>
+<code>treat = 1</code> si el predio está dentro del área de influencia
+<strong>y</strong> el año es ≥ 2019. La variable concreta a usar
+(<code>treatment_800</code>, <code>treatment_1200</code> o la variable
+de la nueva AI) depende del objetivo del análisis; la definición
+<strong>base es 800m</strong> (<code>treatment_800</code>). -
+<strong>Efectos fijos:</strong> lote (<code>codigo_lote</code>) + año
+(<code>year</code>) - <strong>Errores estándar:</strong> clusterizados a
+nivel de barrio (<code>codigo_barrio</code>) - <strong>Grupo de
+control:</strong> el universo de predios de Bogotá fuera del área de
+influencia definida (ciudad completa menos el grupo de tratamiento),
+excepto en <code>8_robustez_control.do</code> donde se usa un
+contrafactual espacialmente definido (ver Etapa 8).</p>
+</div>
+<div id="did-dinámico-tendencias-paralelas" class="section level3">
+<h3>DiD Dinámico (Tendencias Paralelas)</h3>
+<p>Para verificar el supuesto de tendencias paralelas y visualizar la
+dinámica temporal del efecto, se estima un <strong>DiD dinámico</strong>
+(o DiD con ventanas de tiempo): se interactúa el indicador de
+tratamiento con dummies de año calendario, omitiendo 2018 como año de
+referencia.</p>
+<blockquote>
+<p><strong>Nota terminológica:</strong> Los gráficos de coeficientes
+resultantes (archivos <code>DiD_windows_*.pdf</code>) suelen denominarse
+coloquialmente “event study plots” en la literatura, pero técnicamente
+son <strong>coeficientes de un DiD dinámico indexados por año
+calendario</strong> (2014, 2015, …, 2025), no por tiempo relativo al
+tratamiento (t−5, t−4, …). Dado que el tratamiento es simultáneo para
+todas las unidades (2019), ambas representaciones son matemáticamente
+equivalentes y los coeficientes son idénticos; solo diferiría el
+etiquetado del eje x. En un diseño con adopción escalonada
+(<em>staggered</em>), la distinción sería sustantiva.</p>
+</blockquote>
+<pre class="stata"><code>forvalues i = 2014/2025 {
+    gen trat_`i&#39; = cond(year==`i&#39;, 1*treatment_800, 0)
+}
+replace trat_2018 = 0   // año omitido (referencia)
+
+reghdfe ln_avaluo_real_2014 trat_*, a(codigo_lote year) vce(cluster codigo_barrio)
+coefplot ..., keep(trat_*) vertical yline(0)</code></pre>
+</div>
+<div id="deflactación" class="section level3">
+<h3>Deflactación</h3>
+<p>Los valores nominales se convierten a precios constantes de 2014
+usando el IPC de diciembre de cada año (DANE):</p>
+<pre><code>cum_mult_2014 = 1
+cum_mult_t    = cum_mult_{t-1} × (1 + IPC_t / 100)   para t &gt; 2014
+avaluo_real_2014 = valor_avaluo_nominal / cum_mult_t</code></pre>
+</div>
+<div id="exclusiones" class="section level3">
+<h3>Exclusiones</h3>
+<p>Se excluyen de todas las estimaciones los predios con los siguientes
+destinos económicos (no capturable por TIF): - VIAS, ESPACIO PÚBLICO,
+LOTE DEL ESTADO, DOTACIONAL PÚBLICO, RECREACIONAL PÚBLICO</p>
+</div>
+<div id="áreas-de-influencia" class="section level3">
+<h3>Áreas de Influencia</h3>
+<table>
+<colgroup>
+<col width="44%" />
+<col width="37%" />
+<col width="18%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Definición</th>
+<th>Variable</th>
+<th>Uso</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>400m</td>
+<td><code>treatment_400</code></td>
+<td>Exploratoria (buffer estrecho)</td>
+</tr>
+<tr class="even">
+<td><strong>800m</strong></td>
+<td><strong><code>treatment_800</code></strong></td>
+<td><strong>Especificación base</strong></td>
+</tr>
+<tr class="odd">
+<td>1200m</td>
+<td><code>treatment_1200</code></td>
+<td>Ejercicio exploratorio (solicitado; no es la especificación
+principal)</td>
+</tr>
+<tr class="even">
+<td>Nueva AI</td>
+<td><code>treatment</code> (archivo 6)</td>
+<td><strong>Especificación por defecto para análisis
+posteriores</strong> — ver nota abajo</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Nueva Área de Influencia:</strong> Está delimitada por
+avenidas y vías importantes cercanas al corredor del metro, lo que la
+hace coincidir aproximadamente con el buffer de 800m pero respeta la
+geometría urbana real (manzanas y predios completos). Esta definición
+fue sugerida por entidades gubernamentales y le da soporte legal al
+perímetro de influencia, reduciendo la arbitrariedad de un radio fijo
+que puede cortar manzanas y predios a la mitad.</p>
+</blockquote>
+<hr />
+</div>
+</div>
+<div id="datos-procesados-intermedios" class="section level2">
+<h2>Datos Procesados Intermedios</h2>
+<table>
+<colgroup>
+<col width="26%" />
+<col width="38%" />
+<col width="35%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Archivo</th>
+<th>Descripción</th>
+<th>Generado en</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>predios_completos.dta</code></td>
+<td>Panel completo sin balancear</td>
+<td><code>1_append_merge.do</code></td>
+</tr>
+<tr class="even">
+<td><code>predios_balanceado.dta</code></td>
+<td>Solo predios observados los 12 años</td>
+<td><code>1_append_merge.do</code></td>
+</tr>
+<tr class="odd">
+<td><code>predios_tratamiento_shp.dta</code></td>
+<td>Variables de tratamiento y tramo del shapefile</td>
+<td><code>1_append_merge.do</code></td>
+</tr>
+<tr class="even">
+<td><code>predios.dta</code></td>
+<td>Panel balanceado + tratamiento</td>
+<td><code>1_append_merge.do</code></td>
+</tr>
+<tr class="odd">
+<td><code>predios_proc.dta</code></td>
+<td>Panel + valores reales deflactados (~5.4 GB)</td>
+<td><code>2_analysis_did.do</code></td>
+</tr>
+<tr class="even">
+<td><code>predios_robust.dta</code></td>
+<td>Panel + tres definiciones de buffer (~5.5 GB)</td>
+<td><code>5_robustez.do</code></td>
+</tr>
+<tr class="odd">
+<td><code>manzanas_proc.dta</code></td>
+<td>Panel colapsado a nivel manzana + tratamiento</td>
+<td><code>3_analysis_did_atributes.do</code></td>
+</tr>
+<tr class="even">
+<td><code>treat_CEM.dta</code></td>
+<td>Muestra de 2018 con pesos CEM</td>
+<td><code>4_analysis_cem.do</code></td>
+</tr>
+<tr class="odd">
+<td><code>treat_weights.dta</code></td>
+<td>Pesos CEM para merge al panel</td>
+<td><code>4_analysis_cem.do</code></td>
+</tr>
+<tr class="even">
+<td><code>predios_proc_ai2.dta</code></td>
+<td>Pipeline completo sobre nueva AI</td>
+<td><code>6_nueva_ai.do</code></td>
+</tr>
+<tr class="odd">
+<td><code>manzanas_access.dta</code></td>
+<td>Índices de accesibilidad a nivel manzana</td>
+<td><code>7_centralidades.do</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
 </div>
 <div id="descripción-de-outcomes" class="section level2">
 <h2>Descripción de Outcomes</h2>
-<p>El código está automatizado para exportar los resultados directamente
-a la carpeta <code>/outcomes</code>. Los principales productos generados
-son:</p>
-<div id="tablas-de-regresión-formatos-.docx" class="section level3">
-<h3>Tablas de Regresión (Formatos .docx)</h3>
-<p>Utilizando el comando <code>outreg2</code>, el sistema genera tablas
-académicas con los resultados de las estimaciones:</p>
-<ul>
-<li><strong><code>DID_simple.docx</code></strong>: Contiene el efecto
-promedio del tratamiento (ATT) sobre el avalúo real, comparando los
-buffers de 400m, 800m y 1200m.</li>
-<li><strong><code>DID_heter_tram.docx</code></strong>: Desglose del
-impacto según el tramo de la PLMB.</li>
-<li><strong><code>CEM_results.docx</code></strong>: Resultados del
-modelo tras el emparejamiento por <em>Coarsened Exact
-Matching</em>.</li>
-</ul>
+<div id="tablas-de-regresión-formato-.docx-generadas-con-outreg2" class="section level3">
+<h3>Tablas de Regresión (formato .docx, generadas con
+<code>outreg2</code>)</h3>
+<table>
+<colgroup>
+<col width="45%" />
+<col width="55%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Archivo</th>
+<th>Contenido</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>DID_simple.docx</code></td>
+<td>ATT sobre avalúo catastral real — buffers 400m, 800m, 1200m</td>
+</tr>
+<tr class="even">
+<td><code>DID_heter_dest.docx</code></td>
+<td>Heterogeneidad por destino económico (AI 1200m y AI Vías)</td>
+</tr>
+<tr class="odd">
+<td><code>DID_heter_estr.docx</code></td>
+<td>Heterogeneidad por estrato socioeconómico (residencial)</td>
+</tr>
+<tr class="even">
+<td><code>DID_heter_dest_res.docx</code></td>
+<td>ATT solo sobre predios residenciales</td>
+</tr>
+<tr class="odd">
+<td><code>DID_heter_tram.docx</code></td>
+<td>Heterogeneidad por tramo de la PLMB</td>
+</tr>
+<tr class="even">
+<td><code>DID_CEM.docx</code></td>
+<td>ATT con muestra emparejada por CEM</td>
+</tr>
+<tr class="odd">
+<td><code>DID_atributes.docx</code></td>
+<td>Efecto sobre área construida (nivel manzana)</td>
+</tr>
+<tr class="even">
+<td><code>DID_atributes_aim.docx</code></td>
+<td>Efecto sobre área construida — diseño AIM</td>
+</tr>
+<tr class="odd">
+<td><code>DID_heter_dest_access.docx</code></td>
+<td>Heterogeneidad destino × accesibilidad</td>
+</tr>
+<tr class="even">
+<td><code>DID_heter_estr_access.docx</code></td>
+<td>Heterogeneidad estrato × accesibilidad (residencial)</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div id="visualizaciones-formatos-.pdf" class="section level3">
-<h3>Visualizaciones (Formatos .pdf)</h3>
-<p>Se generan gráficos de coeficientes para analizar la dinámica
-temporal y la validez de los supuestos:</p>
-<ul>
-<li><strong><code>DiD_windows.pdf</code></strong>: Gráfico de DiD
-dinámico que muestra los coeficientes año a año para verificar la
-tendencia paralela y la evolución del impacto post-2019.</li>
-<li><strong><code>DiD_windows_com.pdf</code></strong>: Análisis
-específico para el valor comercial, para monitorear las diferencias
-entre valores catastrales y comerciales.</li>
-</ul>
+<div id="gráficos-de-coeficientes-formato-.pdf" class="section level3">
+<h3>Gráficos de Coeficientes (formato .pdf)</h3>
+<table>
+<colgroup>
+<col width="45%" />
+<col width="55%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Archivo</th>
+<th>Contenido</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>DiD_windows_1200.pdf</code></td>
+<td>Event study — avalúo catastral, buffer 1200m</td>
+</tr>
+<tr class="even">
+<td><code>DiD_windows_com_1200.pdf</code></td>
+<td>Event study — valor comercial, buffer 1200m</td>
+</tr>
+<tr class="odd">
+<td><code>DiD_windows_filter.pdf</code></td>
+<td>Event study — sin predios públicos</td>
+</tr>
+<tr class="even">
+<td><code>DiD_windows_area.pdf</code></td>
+<td>Event study — área construida nivel manzana</td>
+</tr>
+<tr class="odd">
+<td><code>DiD_windows_tram.pdf</code></td>
+<td>Event study — por tramo (Tramo 1, 2, 3)</td>
+</tr>
+<tr class="even">
+<td><code>DiD_heter_dest_access.pdf</code></td>
+<td>ATT por destino económico dentro de cada quintil de
+accesibilidad</td>
+</tr>
+</tbody>
+</table>
+<hr />
 </div>
 </div>
 <div id="requerimientos" class="section level2">
 <h2>Requerimientos</h2>
-<p>Es necesario instalar los siguientes paquetes en Stata antes de
-ejecutar los scripts:</p>
+<p>Instalar los siguientes paquetes en Stata antes de ejecutar:</p>
 <pre class="stata"><code>ssc install reghdfe
 ssc install ftools
 ssc install outreg2
 ssc install cem
 ssc install coefplot</code></pre>
+<hr />
 </div>
 <div id="configuración-de-rutas" class="section level2">
 <h2>Configuración de Rutas</h2>
-<p>El usuario debe ajustar la global dir_0 en los encabezados de los
-archivos para apuntar a su directorio local de trabajo.</p>
+<p>Cada do-file define al inicio:</p>
+<pre class="stata"><code>global dir_0 &quot;C:\Users\USUARIO\\&quot;</code></pre>
+<p>Los datos se esperan en:</p>
+<pre><code>${dir_0}OneDrive - Universidad de los andes\RA Andes - TIF\Datos\</code></pre>
+<p>Los outcomes se exportan a:</p>
+<pre><code>${dir_0}Documents\GitHub\TIF_PLMB\Datos\outcomes\</code></pre>
+<blockquote>
+<p><strong>Nota:</strong> Asegurarse de que solo una línea
+<code>global dir_0</code> esté activa en cada archivo (la segunda línea
+debe estar comentada con <code>//</code>).</p>
+</blockquote>
+<hr />
+</div>
+<div id="orden-de-ejecución" class="section level2">
+<h2>Orden de Ejecución</h2>
+<p>Los do-files deben correrse en este orden. Los archivos 3a y 3b
+pueden ejecutarse en paralelo después del 2.</p>
+<pre><code>1_append_merge.do
+    └── 2_analysis_did.do
+            ├── 3_analysis_did_atributes.do
+            ├── 3_analysis_did_heter.do
+            ├── 4_analysis_cem.do
+            └── 5_robustez.do
+6_nueva_ai.do
+    └── 7_centralidades.do
+            └── 9_heter_access.do
+8_robustez_control.do   (requiere predios_proc_ai2.dta de 6_nueva_ai.do)</code></pre>
 </div>
 </div>
 
