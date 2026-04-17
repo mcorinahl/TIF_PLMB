@@ -418,7 +418,7 @@ save "${dir_proc}predios_proc_ai2.dta", replace
 #d;
 	reghdfe ln_avaluo_real_2014 
 		c.treat##i.dest_cat_pre, 
-		a(codigo_lote year)
+		a(codigo_lote year, savefe)
 		vce(cluster codigo_barrio);
 #d cr 
 
@@ -436,7 +436,7 @@ replace estr_pre = 0 if estr_pre == 6
 #d;
 	reghdfe ln_avaluo_real_2014 
 		c.treat##i.estr_pre if dest_cat == 2, 
-		a(codigo_lote year)
+		a(codigo_lote year, savefe)
 		vce(cluster codigo_barrio);
 #d cr 
 
