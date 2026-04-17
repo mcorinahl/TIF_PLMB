@@ -133,5 +133,5 @@ keep codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto
 #d cr
 
 * Exportar
-export delimited using "${dir_outcomes}prediccion_SDH_2025_2026.csv", replace
+export delimited using "${dir_proc}prediccion_SDH_2025_2026.csv", replace
 
