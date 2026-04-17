@@ -18,7 +18,7 @@ set more off
 
 ** Path
 global dir_0 "C:\Users\USUARIO\\"
-global dir_0 "C:\Users\proyecto\\"
+//global dir_0 "C:\Users\proyecto\\"
 
 ** Data
 global dir_data "${dir_0}OneDrive - Universidad de los andes\RA Andes - TIF\Datos\\"
@@ -54,43 +54,77 @@ estimado dividido, bajo el supuesto de que en 2026 la obra sigue
 generando plusvalía al ritmo promedio histórico. 
 */
 
-use "${dir_0}Desktop\predios_proc_ai2\predios_proc_ai2.dta", clear
+* Importar base de datos completa
+// use "${dir_0}Desktop\predios_proc_ai2\predios_proc_ai2.dta", clear
+// use "${dir_proc}predios_proc_ai2.dta", clear
+ 
+* Importar base de datos de control robusto (contiguo a la zona de influencia)
+ use "${dir_proc}predios_ai2_contr_rob.dta", clear
 
 * Exclusiones de estrato
-drop if estr_pre == 0 | missing(estr_pre)
-replace estr_pre = 0 if estr_pre == 6    // estrato 6 como base
+drop if missing(estr_pre)
+replace estr_pre = . if estr_pre == 0
+replace estr_pre = 0 if estr_pre == 6
 
 * Modelo heterogéneo por estrato con FEs guardados
-#d;
-reghdfe ln_avaluo_real_2014
-    c.treat##i.estr_pre,
-    absorb(codigo_lote year, savefe)
-    vce(cluster codigo_barrio)
-	resid;
-#d cr
 
-* Verificar FE 
-describe __hdfe*
+#d;
+	reghdfe ln_avaluo_real_2014 
+		c.treat##i.estr_pre if dest_cat == 2 & !missing(estr_pre), 
+		absorb(codigo_lote year, savefe)
+		vce(cluster codigo_barrio)
+		resid;
+#d cr 
+
+* Preservar los FEs de estrato
+rename __hdfe1__ fe_estr_lote
+rename __hdfe2__ fe_estr_year
+
+* Modelo heterogéneo por destino con FEs guardados
+#d;
+	reghdfe ln_avaluo_real_2014 
+		c.treat##i.dest_cat_pre, 
+		a(codigo_lote year, savefe)
+		vce(cluster codigo_barrio)
+		resid;
+#d cr
 
 * Valor ajustado completo (EF predio α_i + EF año γ_t + coeficientes Xβ)
 predict ln_avaluo_pred, xbd
 
+* Preservar los FEs de destino
+rename __hdfe1__ fe_dest_lote
+rename __hdfe2__ fe_dest_year 
+
+* Verificar FE 
+describe fe_*
+
 * Tendencia del FE de año: Δγ = γ_2025 − γ_2024
-* __hdfe2__ es el year FE (segundo término del absorb), constante dentro de cada año
-sum __hdfe2__ if year == 2025, meanonly
+* fe_dest_year es el year FE (segundo término del absorb), constante dentro de cada año
+sum fe_dest_year if year == 2025, meanonly
 scalar gamma_2025 = r(mean)
-sum __hdfe2__ if year == 2024, meanonly
+sum fe_dest_year if year == 2024, meanonly
 scalar gamma_2024 = r(mean)
 scalar delta_gamma = gamma_2025 - gamma_2024
 
 * Delta en log atribuible al metro, por estrato (0 para no tratados)
 gen delta_ln = 0
-replace delta_ln = _b[treat]                           if treat==1 & estr_pre==0
-replace delta_ln = _b[treat] + _b[1.estr_pre#c.treat]  if treat==1 & estr_pre==1
-replace delta_ln = _b[treat] + _b[2.estr_pre#c.treat]  if treat==1 & estr_pre==2
-replace delta_ln = _b[treat] + _b[3.estr_pre#c.treat]  if treat==1 & estr_pre==3
-replace delta_ln = _b[treat] + _b[4.estr_pre#c.treat]  if treat==1 & estr_pre==4
-replace delta_ln = _b[treat] + _b[5.estr_pre#c.treat]  if treat==1 & estr_pre==5
+
+*── Residencial (dest_cat_pre == 2): modelo residencial por estrato ──────────
+* Base: estr_pre == 0 (estrato 6 recodificado)
+replace delta_ln = -0.00                          if treat==1 & dest_cat_pre==2 & estr_pre==0
+replace delta_ln =  0.2659489             if treat==1 & dest_cat_pre==2 & estr_pre==1
+replace delta_ln =  0.1841864             if treat==1 & dest_cat_pre==2 & estr_pre==2
+replace delta_ln =  0.1577741             if treat==1 & dest_cat_pre==2 & estr_pre==3
+replace delta_ln = 0.0902845             if treat==1 & dest_cat_pre==2 & estr_pre==4
+replace delta_ln =  0.0357388             if treat==1 & dest_cat_pre==2 & estr_pre==5
+
+*── Otros destinos: modelo por destino económico ─────────────────────────────
+replace delta_ln = _b[treat] + _b[3.dest_cat_pre#c.treat]  if treat==1 & dest_cat_pre==3
+replace delta_ln = _b[treat] + _b[4.dest_cat_pre#c.treat]  if treat==1 & dest_cat_pre==4
+replace delta_ln = _b[treat] + _b[5.dest_cat_pre#c.treat]  if treat==1 & dest_cat_pre==5
+replace delta_ln = _b[treat] + _b[6.dest_cat_pre#c.treat]  if treat==1 & dest_cat_pre==6
+replace delta_ln = _b[treat] + _b[7.dest_cat_pre#c.treat]  if treat==1 & dest_cat_pre==7
 
 * Corte 2025 y conversión a pesos nominales (cum_mult del merge IPC)
 keep if year == 2025
@@ -123,13 +157,39 @@ label var avaluo_2026_flat     "Proyección 2026 - gamma plano (nominal)"
 label var avaluo_2026_trend    "Proyección 2026 - gamma tendencia lineal (nominal)"
 label var avaluo_2026_premium  "Proyección 2026 - con premium: γ tendencia + δ metro"
 
+* Merge con código CHIP
+preserve 
+
+import delim "C:\Users\USUARIO\OneDrive - Universidad de los andes\Archivos de Alvaro Andres Casas Camargo - TIF - PLMB\2. Repositorio del Banco Mundial\INFORMACIÓN CATASTRAL Y PREDIAL\PREDIAL_CHIP\EMISION_2025.csv", clear
+
+tempfile chip
+save `chip', replace
+
+restore 
+
+merge 1:1 codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto using `chip', gen(merge_chip) keep (matched)
+
+/*
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                     1,735,969
+        from master                        62  (merge_chip==1)
+        from using                  1,735,907  (merge_chip==2)
+
+    Matched                         1,154,261  (merge_chip==3)
+    -----------------------------------------
+*/
+
 * Exportar la base 
+* Dejamos solo las manzanas en el AI 
+keep if ai_tratamiento == 3
+
+* Dejamos las variables de interés
 #d ;
-keep codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_resto
-	codigo_lote ai_tratamiento valor_avaluo impuesto_ajustado 
+keep chip valor_avaluo impuesto_ajustado 
 	descripcion_destino codigo_estrato
-	avaluo_fitted_2025 avaluo_sinmetro_2025 delta_metro_pct 
-	avaluo_2026_flat avaluo_2026_trend avaluo_2026_premium;
+	avaluo_2026_trend avaluo_2026_premium
+	delta_metro_pct;
 #d cr
 
 * Exportar
