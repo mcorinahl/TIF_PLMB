@@ -141,13 +141,13 @@ gen delta_metro_pct      = (exp(delta_ln) - 1) * 100
 
 *── 2026
 * 1) Conservador: γ_2026 = γ_2025 y solo sube por IPC
-gen avaluo_2026_flat     = exp(ln_avaluo_pred) * cum_mult_2026
+gen avaluo_2026_flat     = exp(ln_avaluo_real_2014) * cum_mult_2026
 
 * 2) Tendencia: γ_2026 = γ_2025 + Δγ continuando la dinámica real reciente
-gen avaluo_2026_trend    = exp(ln_avaluo_pred + delta_gamma) * cum_mult_2026
+gen avaluo_2026_trend    = exp(ln_avaluo_real_2014 + delta_gamma) * cum_mult_2026
 
 * 3) Tendencia más capitalización γ_2026 = γ_2025 + Δγ + capitalización metro. 
-gen avaluo_2026_premium = exp(ln_avaluo_pred + delta_gamma + delta_ln) * cum_mult_2026
+gen avaluo_2026_premium = exp(ln_avaluo_real_2014 + delta_gamma + delta_ln) * cum_mult_2026
 
 *── Etiquetas 
 label var avaluo_fitted_2025   "Avalúo ajustado 2025 - modelo (nominal)"
@@ -188,6 +188,7 @@ keep if ai_tratamiento == 3
 #d ;
 keep chip valor_avaluo impuesto_ajustado 
 	descripcion_destino codigo_estrato
+	avaluo_fitted_2025 avaluo_sinmetro_2025
 	avaluo_2026_trend avaluo_2026_premium
 	delta_metro_pct;
 #d cr
