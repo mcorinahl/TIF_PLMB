@@ -182,7 +182,7 @@ merge 1:1 codigo_barrio codigo_manzana codigo_predio codigo_construccion codigo_
 
 * Exportar la base 
 * Dejamos solo las manzanas en el AI 
-keep if ai_tratamiento == 3
+// keep if ai_tratamiento == 3
 
 * Dejamos las variables de interés
 #d ;
@@ -190,7 +190,7 @@ keep chip valor_avaluo impuesto_ajustado
 	descripcion_destino codigo_estrato
 	avaluo_fitted_2025 avaluo_sinmetro_2025
 	avaluo_2026_trend avaluo_2026_premium
-	delta_metro_pct;
+	delta_metro_pct ai_tratamiento;
 #d cr
 
 * Exportar
